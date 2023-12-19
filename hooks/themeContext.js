@@ -1,0 +1,56 @@
+import React, { useState, useEffect } from 'react';
+import { useColorScheme } from 'react-native';
+
+const ThemeContext = React.createContext();
+
+export const ThemeProvider = ({ children }) => {
+  const darkTheme = {
+    dark: true,
+    colors: {
+      primary: 'rgb(255, 45, 85)',
+      primaryBackground: 'black',
+      secondaryBackground: '#222222',
+      tetiaryBackground: '#222222',
+      card: 'rgb(255, 255, 255)',
+      text: 'white',
+      border: 'light',
+      notification: 'rgb(255, 69, 58)',
+      backButtonBg:'rgba(0.6, 0, 0,0)'
+    },
+  };
+
+  const lightTheme = {
+    dark: false,
+    colors: {
+      primary: 'rgb(255, 45, 85)',
+      background: 'rgb(242, 242, 242)',
+      card: 'rgb(255, 255, 255)',
+      text: 'rgb(28, 28, 30)',
+      border: 'rgb(199, 199, 204)',
+      notification: 'rgb(255, 69, 58)',
+      backButtonBg:'rgba(0, 0, 0, 0.6)'
+    },
+  };
+
+  const colorScheme = useColorScheme();
+  const initialTheme = colorScheme === 'dark' ? darkTheme : lightTheme;
+  const [theme, setTheme] = useState(initialTheme);
+
+  
+
+  useEffect(() => {
+    // Do any additional logic based on theme change if needed
+  }, [theme]);
+
+  return (
+    <ThemeContext.Provider value={{ theme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+export const useThemeContext = () => {
+  return React.useContext(ThemeContext);
+};
+
+
