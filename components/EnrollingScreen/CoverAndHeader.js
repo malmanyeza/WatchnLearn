@@ -10,10 +10,6 @@ const CoverAndHeader = ({ subjectImage, subjectName, tutorName, tutorAvatar, rat
       <Image source={subjectImage} style={styles.coverImage} />
       <View style={styles.nameAndRating}>
         <Text style={styles.subjectName}>{subjectName}</Text>
-        <View style={styles.ratingContainer}>
-          <Ionicons name="star" size={20} color="orange" />
-          <Text style={styles.ratingText}>{rating}</Text>
-        </View>
       </View>
       <View style={styles.tutorInfoContainer}>
         <Image source={tutorAvatar} style={styles.tutorAvatar} />
@@ -41,8 +37,8 @@ const styles = StyleSheet.create({
     paddingLeft:5
   },
   subjectName: {
-    fontWeight: 'bold',
-    fontSize: 24,
+    fontFamily:'ComicNeue-Bold',
+    fontSize: 27,
     marginVertical: 10,
   },
   ratingContainer: {
@@ -66,7 +62,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   tutorName: {
-    fontSize: 16,
+    fontFamily:'ComicNeue-Bold',
+    fontSize: 19,
   },
 });
 

@@ -44,10 +44,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
   },
   title: {
-    fontSize: 15,
+    fontFamily:'ComicNeue-Bold',
+    fontSize: 17,
   },
   subtitle: {
-    fontSize: 13,
+    fontFamily:'ComicNeue-Bold',
+    fontSize: 15,
     color: '#666',
   },
 });

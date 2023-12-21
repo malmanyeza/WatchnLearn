@@ -53,6 +53,7 @@ const Categories = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={[styles.header,{color:theme.colors.text}]}>Categories</Text>
       <FlatList
         data={categories}
         renderItem={renderItem}
@@ -79,16 +80,25 @@ const styles = StyleSheet.create({
   },
   selectedButton: {
     transform: [{ scale: 1.12 }],
-    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
     marginHorizontal: 10,
-    borderWidth: 0,
+    borderWidth: 1,
   },
   buttonText: {
     color: 'black',
+    fontFamily:'ComicNeue-Bold',
+    fontSize:18
   },
   selectedButtonText: {
     color: 'white',
   },
+
+  header:{
+    fontFamily:'ComicNeue-Bold',
+    fontSize:28,
+    paddingLeft:5,
+    marginBottom:10
+  }
 });
 
 export default memo(Categories);

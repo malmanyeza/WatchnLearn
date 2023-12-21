@@ -62,13 +62,6 @@ const MyClassesList = () => {
               {color:theme.colors.text}
               ]}>Past papers</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={[
-              styles.syllabus,
-              {backgroundColor:theme.colors.secondaryBackground},
-              {color:theme.colors.text}
-              ]}>Forum</Text>
-          </TouchableOpacity>
         </View>
         <FlatList
           data={item.forms}
@@ -106,14 +99,14 @@ const MyClassesList = () => {
 const styles = StyleSheet.create({
   subjectContainer: {
     padding: 10,
-    marginVertical: 20,
+    marginTop: 30,
   },
   headerContainer: {
     flexDirection: 'row',
   },
   subjectText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 25,
+    fontFamily:'ComicNeue-Bold',
     marginBottom: 5,
   },
   syllabus: {
@@ -122,7 +115,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingVertical: 5,
     paddingHorizontal: 10,
-    marginLeft: 10,
+    marginLeft: 20,
+    fontFamily:'ComicNeue-Bold',
   },
   formContainer: {
     flex: 1,

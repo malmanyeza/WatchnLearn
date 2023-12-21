@@ -20,20 +20,20 @@ const HomeScreen = () => {
         {backgroundColor:theme.colors.primaryBackground}
         ]}>
         <SearchBar searchBarTitle={'Search Subjects'}/>
-        <ScrollView 
-          nestedScrollEnabled={true}>
+      
           <Categories/>
           <SubjectCardList/>
-          <PopularSubjectsList/>
-        </ScrollView>
+        
       </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop:20,
+    paddingTop:30,
     flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   }
 });
 

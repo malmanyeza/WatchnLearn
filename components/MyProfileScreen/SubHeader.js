@@ -36,8 +36,9 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     name:{
-        fontWeight:'bold',
-        marginBottom:5
+        fontSize:18,
+        marginBottom:5,
+        fontFamily:'ComicNeue-Bold'
     },
     emailAndName:{
      
@@ -57,8 +58,8 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     initialLetter:{
+        fontFamily:'ComicNeue-Bold',
         color:'white',
-        fontWeight:'bold',
-        fontSize:25
+        fontSize:28
     }
 })

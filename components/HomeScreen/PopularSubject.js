@@ -25,17 +25,6 @@ const {theme} = useThemeContext()
           {color:theme.colors.text}
           ]}>{subjectName}</Text>
         <View style={styles.tutorInfo}>
-        <View style={styles.ratingContainer}>
-          <Ionicons name="star" size={16} color="gray" />
-          <Text style={[
-            styles.ratingText,
-            {color:theme.colors.text}
-            ]}>{rating}</Text>
-          <Text style={[
-            styles.ratingText,
-            {color:theme.colors.text}
-            ]}>{'('+enrollers+')'}</Text>
-        </View>
           <Text style={[
             styles.syllabus,
             {backgroundColor:theme.colors.secondaryBackground},
@@ -71,13 +60,11 @@ const styles = StyleSheet.create({
   },
   subjectName: {
     marginBottom:10,
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontFamily:'ComicNeue-Bold'
   },
   tutorInfo: {
     flexDirection: 'row',
-    alignItems: 'baseline',
-    justifyContent:'space-between'
   },
   tutorAvatar: {
     width: 25,
@@ -91,9 +78,9 @@ const styles = StyleSheet.create({
   syllabus: {
     borderRadius: 5,
     paddingVertical: 5,
-    paddingHorizontal: 10,
     marginRight: 10,
-    marginLeft: 30
+    fontFamily:'ComicNeue-Regular',
+    fontSize:16
   },
   ratingContainer: {
     flexDirection: 'row',

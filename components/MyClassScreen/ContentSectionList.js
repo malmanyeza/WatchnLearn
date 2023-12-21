@@ -94,8 +94,8 @@ const styles = StyleSheet.create({
     marginTop:10
   },
   sectionHeaderText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontFamily:'ComicNeue-Bold'
   },
   separator: {
     height: 1,

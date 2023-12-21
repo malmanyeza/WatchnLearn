@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 21,
+    fontFamily:'ComicNeue-Bold',
     textAlign:'center'
   },
 });

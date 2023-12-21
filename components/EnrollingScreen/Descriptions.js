@@ -1,9 +1,12 @@
 import React, { useState, memo } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { useThemeContext } from '../../hooks/themeContext';
 
 const { height } = Dimensions.get('window');
 
 const Description = ({descriptionText}) => {
+
+  const {theme} = useThemeContext()
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpanded = () => {
@@ -19,7 +22,7 @@ const Description = ({descriptionText}) => {
         </Text>
         {!expanded && (
           <TouchableOpacity onPress={toggleExpanded}>
-            <Text style={styles.readMore}>Read more</Text>
+            <Text style={[styles.readMore,{color:theme.colors.text}]}>Read more</Text>
           </TouchableOpacity>
         )}
       </ScrollView>
@@ -43,12 +46,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   description: {
-    fontSize: 16,
+    fontFamily:'ComicNeue-Bold',
+    fontSize: 19,
   },
   readMore: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'blue',
+    fontFamily:'ComicNeue-Bold',
+    fontSize: 19,
     textAlign: 'right',
     marginVertical: 5,
   },

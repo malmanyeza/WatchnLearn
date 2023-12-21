@@ -1,13 +1,15 @@
 import React, { memo, useCallback, useRef, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { BallIndicator } from 'react-native-indicators'; // Step 1
 import { useNavigation } from '@react-navigation/native';
 import { useSubjectContext } from '../../hooks/subjectDetailsConst';
 import { useAllSubjectsContext } from '../../hooks/allSubjectsContext';
 import Colors from '../../constants/Colors';
 import  SubjectCard  from './SubjectCards';
+import { useThemeContext } from '../../hooks/themeContext';
 
 const SubjectCardList = () => {
+  const {theme} = useThemeContext()
   const flatListRef = useRef(null);
   const navigation = useNavigation();
   const { filteredSubjects } = useAllSubjectsContext();
@@ -56,6 +58,18 @@ const SubjectCardList = () => {
 
   return (
     <View>
+      <View style={styles.header}>
+          <Text style={[
+            styles.headerText,
+            {color:theme.colors.text}
+            ]}>Subjects</Text>
+          <TouchableOpacity onPress={()=>{navigation.navigate('PopularClasses')}}>
+            <Text style={[
+              styles.seeAll,
+              {color:theme.colors.text}
+              ]}>See All</Text>
+          </TouchableOpacity>
+        </View>
       <FlatList
         ref={flatListRef}
         horizontal
@@ -73,12 +87,22 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginBottom:20
   },
-  // indicatorContainer: {
-  //   position: 'absolute',
-  //   top: '50%', // Place the indicator at the center vertically
-  //   left: '50%', // Place the indicator at the center horizontally
-  //   transform: [{ translateX: -12 }, { translateY: -12 }], // Center the indicator perfectly
-  // },
+  header:{
+    marginHorizontal:10,
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center',
+    marginBottom:20
+  },
+  seeAll:{
+    fontSize:18,
+    fontFamily:'ComicNeue-Bold',
+  },
+  headerText:{
+    paddingLeft:10,
+    fontSize:28,
+    fontFamily:'ComicNeue-Bold'
+  }
 });
 
 export default memo(SubjectCardList);

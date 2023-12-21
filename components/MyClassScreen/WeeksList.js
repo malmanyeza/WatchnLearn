@@ -27,6 +27,7 @@ const WeeksList = () => {
     >
       <Text
         style={{
+          fontFamily: 'ComicNeue-Bold',
           color: activeWeek === item.id ? 'white' : theme.colors.text,
           fontWeight: activeWeek === item.id ? 'bold' : 'normal',
         }}
@@ -56,8 +57,8 @@ const WeeksList = () => {
 
 const styles = StyleSheet.create({
   container: {
+    marginVertical: 20,
     paddingVertical: 5,
-    backgroundColor:'white'
   },
   weekButton: {
     paddingHorizontal: 20,

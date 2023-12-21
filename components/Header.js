@@ -63,8 +63,8 @@ const styles = StyleSheet.create({
     borderWidth:1,
   },
   title: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontFamily:'ComicNeue-Bold',
   },
 });
 

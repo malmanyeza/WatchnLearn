@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, StatusBar, useColorScheme } from 'react-native';
+import React,{useEffect} from 'react';
+import { StyleSheet, StatusBar, useColorScheme, LogBox } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -22,6 +22,7 @@ import { AllSubjectsProvider } from './hooks/allSubjectsContext';
 import { ContentProvider } from './hooks/contentContext';
 import { useTheme } from 'react-native-paper';
 import { ThemeProvider } from './hooks/themeContext';
+import SplashScreen from 'react-native-splash-screen';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -29,6 +30,18 @@ const Tab = createMaterialBottomTabNavigator();
 const HomeTabs = () => {
 
   const colorScheme = useColorScheme();
+  
+  
+
+  useEffect(() => {
+    // Delay for 2 seconds (2000 milliseconds) before hiding the splash screen
+    const timeoutId = setTimeout(() => {
+      SplashScreen.hide();
+    }, 1000);
+    LogBox.ignoreAllLogs()
+    // Clear the timeout if the component unmounts before the delay completes
+    return () => clearTimeout(timeoutId);
+  }, []);
   
   return(
 

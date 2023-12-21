@@ -76,15 +76,18 @@ const styles = StyleSheet.create({
         marginRight:20
     },
     subjectName:{
-        fontWeight:'bold',
+        fontSize:20,
+        fontFamily:'ComicNeue-Bold',
         marginBottom:5
     },
     period:{
+        fontSize:15,
+        fontFamily:'ComicNeue-Bold',
         color:'gray',
     },
     header:{
-        fontWeight:'bold',
-        fontSize:20,
+        fontFamily:'ComicNeue-Bold',
+        fontSize:23,
         margin:20
     },
     text:{
@@ -93,7 +96,8 @@ const styles = StyleSheet.create({
         justifyContent:'space-between'
     },
     date:{
+        fontFamily:'ComicNeue-Bold',
         color:'gray',
-        fontSize:12
+        fontSize:15
     }
 })

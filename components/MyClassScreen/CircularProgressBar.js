@@ -45,7 +45,8 @@ const styles = StyleSheet.create({
     paddingVertical:10
   },
   progressText:{
-    fontSize:30,
+    fontFamily:'ComicNeue-Bold',
+    fontSize:34,
   }});
 
 export default memo(CircularProgressBar);

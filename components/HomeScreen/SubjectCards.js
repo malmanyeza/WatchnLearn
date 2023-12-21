@@ -22,17 +22,6 @@ const SubjectCard = memo(({ subjectImage, subjectName, syllabus, rating, handleO
           styles.subjectName,
           {color:theme.colors.text}
           ]}>{subjectName}</Text>
-        <View style={styles.ratingContainer}>
-          <Ionicons name="star" size={16} color="gray" />
-          <Text style={[
-            styles.ratingText,
-            {color:theme.colors.text}
-            ]}>{rating}</Text>
-          <Text style={[
-            styles.ratingText,
-            {color:theme.colors.text}
-            ]}>{'('+enrollers+')'}</Text>
-        </View>
         <View style={styles.syllabusContainer}>
           <Text style={[
             styles.syllabus,
@@ -75,8 +64,8 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   subjectName: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily:'ComicNeue-Bold',
+    fontSize: 28,
     marginBottom: 5,
   },
   tutorName: {
@@ -96,8 +85,9 @@ const styles = StyleSheet.create({
     color: '#666',
     borderRadius: 5,
     paddingVertical: 5,
-    paddingHorizontal: 10,
     marginRight: 10,
+    fontSize: 17,
+    fontFamily:'ComicNeue-Regular'
   },
   cardArrow: {
     height: 15,
@@ -111,6 +101,17 @@ const styles = StyleSheet.create({
   ratingText: {
     marginLeft: 5,
     fontSize: 16
+  },
+  header:{
+    marginHorizontal:10,
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center',
+    marginBottom:20
+  },
+  seeAll:{
+    fontSize:14,
+    color:'gray'
   }
 });
 

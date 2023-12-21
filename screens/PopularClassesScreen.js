@@ -13,7 +13,7 @@ const PopularClassesScreen = () => {
       {backgroundColor:theme.colors.primaryBackground}
     ]}>
       <Header
-        title="Popular Subjects"
+        title="Subjects"
       />
       <PopularSubjectsList/>
     </View>

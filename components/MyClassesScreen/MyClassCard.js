@@ -30,7 +30,7 @@ const {theme} = useThemeContext()
         </View>
         <View style={styles.progressContainer}>
           <View style={styles.avatarContainer}>
-           <Text>Progress:</Text>
+           <Text style={styles.progressTitle}>Progress:</Text>
            <Text style={styles.progressText}>{progress}%</Text>
           </View>
           <ProgressBar progress={progress} />
@@ -65,8 +65,8 @@ const styles = StyleSheet.create({
     flex:1,
   },
   form: {
-    fontWeight: 'bold',
-    fontSize: 16,
+    fontFamily:'ComicNeue-Bold',
+    fontSize: 18,
     marginBottom:5,
   },
   hoursContainer:{
@@ -75,14 +75,16 @@ const styles = StyleSheet.create({
     marginBottom:5
   },
   totalHours: {
-    fontSize: 14,
+    fontFamily:'ComicNeue-Bold',
+    fontSize: 16,
     marginTop: 5,
     marginRight:20
   },
   hours:{
     marginTop:3,
     color:Colors.primary,
-    fontSize:12
+    fontFamily:'ComicNeue-Bold',
+    fontSize:14
   },
   termContainer:{
     flexDirection:'row',
@@ -90,7 +92,8 @@ const styles = StyleSheet.create({
     marginBottom:5,
   },
   term: {
-    fontSize: 14,
+    fontFamily:'ComicNeue-Bold',
+    fontSize: 16,
     marginTop: 5,
     marginRight:20
   },
@@ -111,8 +114,13 @@ const styles = StyleSheet.create({
     width:"100%",
     fontSize: 12,
     color:Colors.primary,
-    marginLeft:20
+    marginLeft:20,
+    fontFamily:'ComicNeue-Bold',
   },
+  progressTitle:{
+    fontFamily:'ComicNeue-Bold',
+    fontSize: 16,
+  }
 });
 
 export default memo(MyClassCard);

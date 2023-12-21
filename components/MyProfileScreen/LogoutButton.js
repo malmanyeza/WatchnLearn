@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
         justifyContent:'center'
     },
     text:{
+        fontFamily:'ComicNeue-Bold',
         marginLeft:10,
         color:'white'
     }
