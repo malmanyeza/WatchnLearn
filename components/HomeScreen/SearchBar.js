@@ -9,7 +9,8 @@ import { useThemeContext } from '../../hooks/themeContext';
 const SearchBar = ({ searchBarFlex, searchBarTitle }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const { subjects } = useAllSubjectsContext();
+  const [searchFocused, setSearchFocused] = useState(false)
+  const { memoizedSubjects } = useAllSubjectsContext();
   const { setSubjectDetails, subjectDetails } = useSubjectContext();
   const navigation = useNavigation();
   const isFocused = useIsFocused();
@@ -24,7 +25,7 @@ const SearchBar = ({ searchBarFlex, searchBarTitle }) => {
 
   const handleSearch = useCallback(() => {
     const lowercaseQuery = searchQuery.toLowerCase();
-    const filteredResults = subjects.filter((item) => item.subjectName.toLowerCase().startsWith(lowercaseQuery));
+    const filteredResults = memoizedSubjects.filter((item) => item.subjectName.toLowerCase().startsWith(lowercaseQuery));
 
     setSearchResults(filteredResults);
   });
@@ -63,19 +64,27 @@ const SearchBar = ({ searchBarFlex, searchBarTitle }) => {
   return (
     <View style={[styles.outerContainer, { flex: searchBarFlex }, { backgroundColor: theme.colors.primaryBackground }]}>
       <View style={[styles.container, { backgroundColor: theme.colors.tetiaryBackground }]}>
-        <Ionicons name="search" size={24} color="#9B9B9B" style={styles.icon} />
+        <Ionicons name="search" size={24} color={theme.colors.secondaryText} style={styles.icon} />
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: theme.colors.secondaryText }]}
           placeholder={searchBarTitle}
-          placeholderTextColor="#9B9B9B"
+          placeholderTextColor={theme.colors.secondaryText}
           value={searchQuery}
           onChangeText={handleInputChange}
+          onFocus={()=>setSearchFocused(true)}
         />
       </View>
       {searchQuery.length > 0 && searchResults.length > 0 ? (
-        <FlatList data={searchResults} renderItem={renderItem} keyExtractor={(item) => item.id.toString()} />
+        <FlatList 
+          data={searchResults} 
+          renderItem={renderItem} 
+          keyExtractor={(item) => item.id.toString()} 
+          style={{
+            marginBottom:50
+          }}
+        />
       ) : (
-        <Text style={[styles.message]}>
+        <Text style={[styles.message,{color:theme.colors.secondaryText, marginVertical:searchQuery.length>0 && searchFocused?100:0}]}>
           {searchQuery.length > 0 ? 'No search results found' : ''}
         </Text>
       )}

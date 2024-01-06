@@ -19,18 +19,11 @@ const {theme} = useThemeContext()
       ]}>
       <Image source={subjectImage} style={styles.image} />
       <View style={styles.infoContainer}>
-        <Text style={styles.form}>{form}</Text>
-        <View style={styles.termContainer}>
-          <Text style={styles.term}>Term:</Text>
-          <Text style={styles.termNo}>{term}</Text>
-        </View>
-        <View style={styles.hoursContainer}>
-          <Text style={styles.totalHours}>Total hours:</Text>
-          <Text style={styles.hours}>{totalHours}</Text>
-        </View>
+        <Text style={[styles.form,{color:theme.colors.secondaryText}]}>{form}</Text>
+        <Text style={[styles.term,{color:theme.colors.secondaryText}]}>Term: {term}</Text>
         <View style={styles.progressContainer}>
           <View style={styles.avatarContainer}>
-           <Text style={styles.progressTitle}>Progress:</Text>
+           <Text style={[styles.progressTitle,{color:theme.colors.secondaryText}]}>Progress:</Text>
            <Text style={styles.progressText}>{progress}%</Text>
           </View>
           <ProgressBar progress={progress} />
@@ -42,11 +35,10 @@ const {theme} = useThemeContext()
 
 const styles = StyleSheet.create({
   container: {
-    marginLeft:10,
     paddingRight:10,
     flex:1,
-    width: width*0.75,
-    height: height*0.18,
+    width: width*0.8,
+    height: height*0.20,
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 15,
@@ -58,33 +50,18 @@ const styles = StyleSheet.create({
   image: {
     width: '40%',
     height: '90%',
-    borderRadius:22,
+    borderRadius:15,
     marginHorizontal:8,
   },
   infoContainer: {
     flex:1,
+    width:'100%',
+    justifyContent:'space-between'
   },
   form: {
     fontFamily:'ComicNeue-Bold',
-    fontSize: 18,
+    fontSize: 25,
     marginBottom:5,
-  },
-  hoursContainer:{
-    flexDirection:'row',
-    alignItems:'baseline',
-    marginBottom:5
-  },
-  totalHours: {
-    fontFamily:'ComicNeue-Bold',
-    fontSize: 16,
-    marginTop: 5,
-    marginRight:20
-  },
-  hours:{
-    marginTop:3,
-    color:Colors.primary,
-    fontFamily:'ComicNeue-Bold',
-    fontSize:14
   },
   termContainer:{
     flexDirection:'row',
@@ -93,33 +70,30 @@ const styles = StyleSheet.create({
   },
   term: {
     fontFamily:'ComicNeue-Bold',
-    fontSize: 16,
+    fontSize: 22,
     marginTop: 5,
-    marginRight:20
-  },
-  termNo:{
-    fontWeight:'bold',
-    marginTop:3,
-    color:Colors.primary,
-    fontSize:14
+    marginBottom:10
   },
   avatarContainer:{
+    width:'100%',
     flexDirection:'row',
     alignItems:'baseline',
-    marginBottom:5
+    marginBottom:5,
+    justifyContent:'space-between'
   },
   progressContainer: {
+    width:'100%'
   },
   progressText: {
-    width:"100%",
-    fontSize: 12,
+    fontSize: 20,
     color:Colors.primary,
     marginLeft:20,
     fontFamily:'ComicNeue-Bold',
+    alignSelf:'flex-end'
   },
   progressTitle:{
     fontFamily:'ComicNeue-Bold',
-    fontSize: 16,
+    fontSize: 20,
   }
 });
 

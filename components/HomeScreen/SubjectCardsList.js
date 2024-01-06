@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useRef, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { BallIndicator } from 'react-native-indicators'; // Step 1
 import { useNavigation } from '@react-navigation/native';
 import { useSubjectContext } from '../../hooks/subjectDetailsConst';
@@ -7,12 +7,14 @@ import { useAllSubjectsContext } from '../../hooks/allSubjectsContext';
 import Colors from '../../constants/Colors';
 import  SubjectCard  from './SubjectCards';
 import { useThemeContext } from '../../hooks/themeContext';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const SubjectCardList = () => {
+  const {width, height} = Dimensions.get('screen')
   const {theme} = useThemeContext()
   const flatListRef = useRef(null);
   const navigation = useNavigation();
-  const { filteredSubjects } = useAllSubjectsContext();
+  const { filteredSubjects, loadingSubjects } = useAllSubjectsContext();
   const { setSubjectDetails, subjectDetails } = useSubjectContext();
 
   const [loading, setLoading] = useState(false); // Step 2
@@ -36,12 +38,10 @@ const SubjectCardList = () => {
   const renderItem = ({ item }) => (
     <View style={styles.renderItemContainer}>
       <SubjectCard
-        subjectImage={item.subjectImage}
-        subjectName={item.subjectName}
-        syllabus={item.syllabus}
+        subjectImage={item.subjectImageUrl}
+        subjectName={item.name}
+        syllabus={item.syllabus.name}
         handleOnPress={() => handleOnPress(item)}
-        rating={item.rating}
-        enrollers={item.enrollers}
       />
       {loading? (
         <View style={styles.indicatorContainer}>
@@ -52,6 +52,15 @@ const SubjectCardList = () => {
   );
   
 
+  const renderSkeleton = () => (
+    <SkeletonPlaceholder borderRadius={20} backgroundColor={theme.colors.tetiaryBackground} highlightColor={theme.colors.primaryBackground}>
+      <SkeletonPlaceholder.Item flexDirection="row" alignItems="center">
+        <SkeletonPlaceholder.Item width={width * 0.7} height={height * 0.3} borderRadius={20} marginLeft={20} />
+        <SkeletonPlaceholder.Item width={width * 0.7} height={height * 0.3} borderRadius={20} marginLeft={20} />
+      </SkeletonPlaceholder.Item>
+    </SkeletonPlaceholder>
+  );
+
   useEffect(() => {
     scrollToTop();
   }, [filteredSubjects, scrollToTop]);
@@ -59,23 +68,18 @@ const SubjectCardList = () => {
   return (
     <View>
       <View style={styles.header}>
-          <Text style={[
-            styles.headerText,
-            {color:theme.colors.text}
-            ]}>Subjects</Text>
-          <TouchableOpacity onPress={()=>{navigation.navigate('PopularClasses')}}>
-            <Text style={[
-              styles.seeAll,
-              {color:theme.colors.text}
-              ]}>See All</Text>
-          </TouchableOpacity>
-        </View>
+        <Text style={[styles.headerText, { color: theme.colors.text }]}>Subjects</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('PopularClasses')}>
+          <Text style={[styles.seeAll, { color: theme.colors.text }]}>See All</Text>
+        </TouchableOpacity>
+      </View>
+
       <FlatList
         ref={flatListRef}
         horizontal
-        data={filteredSubjects}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        data={loadingSubjects ? Array.from({ length: 2 }) : filteredSubjects}
+        keyExtractor={(item, index) => (loadingSubjects ? `skeleton_${index}` : item.id)}
+        renderItem={loadingSubjects ? renderSkeleton : renderItem}
         showsHorizontalScrollIndicator={false}
       />
     </View>
@@ -85,7 +89,6 @@ const SubjectCardList = () => {
 const styles = StyleSheet.create({
   renderItemContainer: {
     paddingVertical: 10,
-    marginBottom:20
   },
   header:{
     marginHorizontal:10,

@@ -8,11 +8,12 @@ export const ThemeProvider = ({ children }) => {
     dark: true,
     colors: {
       primary: 'rgb(255, 45, 85)',
-      primaryBackground: 'black',
+      primaryBackground: '#000',
       secondaryBackground: '#222222',
       tetiaryBackground: '#222222',
       card: 'rgb(255, 255, 255)',
       text: 'white',
+      secondaryText:'lightgray',
       border: 'light',
       notification: 'rgb(255, 69, 58)',
       backButtonBg:'rgba(0.6, 0, 0,0)'
@@ -22,10 +23,12 @@ export const ThemeProvider = ({ children }) => {
   const lightTheme = {
     dark: false,
     colors: {
-      primary: 'rgb(255, 45, 85)',
-      background: 'rgb(242, 242, 242)',
+      primaryBackground: '#DEDEDE',
+      secondaryBackground: 'rgb(242, 242, 242)',
+      tetiaryBackground:'#FAFAFA',
       card: 'rgb(255, 255, 255)',
-      text: 'rgb(28, 28, 30)',
+      text: 'black',
+      secondaryText:'gray',
       border: 'rgb(199, 199, 204)',
       notification: 'rgb(255, 69, 58)',
       backButtonBg:'rgba(0, 0, 0, 0.6)'
@@ -39,8 +42,10 @@ export const ThemeProvider = ({ children }) => {
   
 
   useEffect(() => {
-    // Do any additional logic based on theme change if needed
-  }, [theme]);
+    const initialTheme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    setTheme(initialTheme)
+  
+  }, [colorScheme]);
 
   return (
     <ThemeContext.Provider value={{ theme }}>

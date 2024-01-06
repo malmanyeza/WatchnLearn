@@ -12,8 +12,8 @@ const ProgressBar = ({ progress }) => {
 
 const styles = StyleSheet.create({
   progressBar: {
-    height: 7,
-    borderRadius: 15,
+    height: 15,
+    borderRadius: 5,
     backgroundColor: '#daebe8',
     overflow: 'hidden',
     flexDirection: 'row',
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   progressBarFill: {
     height: '100%',
     backgroundColor: '#87bdd8',
-    borderRadius:15
+    borderRadius:5
   }
 });
 

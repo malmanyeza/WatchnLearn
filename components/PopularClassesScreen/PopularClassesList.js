@@ -19,11 +19,9 @@ const PopularSubjectsList = () => {
     const renderItem = ({ item }) => (
         <View style={styles.renderItemContainer}>
             <PopularSubject
-               subjectImage={item.subjectImage}
-               subjectName={item.subjectName}
-               rating={item.rating}
-               enrollers={item.enrollers}
-               syllabus={item.syllabus}
+               subjectImage={item.subjectImageUrl}
+               subjectName={item.name}
+               syllabus={item.syllabus.name}
                handleOnPress={()=>handleOnPress(item)}
             />
         </View>

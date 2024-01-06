@@ -1,14 +1,15 @@
 import React, { useState, memo } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, FlatList } from 'react-native';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { useAllSubjectsContext } from '../../hooks/allSubjectsContext';
 import Colors from '../../constants/Colors';
 import { useThemeContext } from '../../hooks/themeContext';
 
 const Categories = () => {
   const [selectedCategory, setSelectedCategory] = useState(0); // Initially selected category is 0
-  const { filteredSubjects, setFilteredSubjects, subjects } = useAllSubjectsContext();
+  const { filteredSubjects, setFilteredSubjects, subjects, loadingSubjects } = useAllSubjectsContext();
 
-  const {theme} = useThemeContext()
+  const { theme } = useThemeContext();
 
   const categories = [
     { id: 0, name: "All Subjects" },
@@ -30,12 +31,28 @@ const Categories = () => {
     }
   };
 
+  const renderSkeleton = () => (
+    <SkeletonPlaceholder backgroundColor={theme.colors.tetiaryBackground} highlightColor={theme.colors.primaryBackground}>
+      <SkeletonPlaceholder.Item flexDirection="row" alignItems="center" >
+        {Array.from({ length: 6 }).map((_, index) => (
+          <SkeletonPlaceholder.Item
+            key={index}
+            width={100}
+            height={40}
+            borderRadius={20}
+            marginLeft={index === 0 ? 0 : 10}
+          />
+        ))}
+      </SkeletonPlaceholder.Item>
+    </SkeletonPlaceholder>
+  );
+
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={[
-        styles.button,  
+        styles.button,
         selectedCategory === item.id && styles.selectedButton,
-        selectedCategory === item.id && {backgroundColor:theme.colors.tetiaryBackground}
+        selectedCategory === item.id && { backgroundColor: theme.colors.tetiaryBackground },
       ]}
       onPress={() => handleCategoryPress(item.id)}
     >
@@ -43,7 +60,7 @@ const Categories = () => {
         style={[
           styles.buttonText,
           selectedCategory === item.id && styles.selectedButtonText,
-          {color:selectedCategory === item.id ? theme.colors.text:theme.colors.secondaryText}
+          { color: selectedCategory === item.id ? theme.colors.text : theme.colors.secondaryText },
         ]}
       >
         {item.name}
@@ -53,14 +70,18 @@ const Categories = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.header,{color:theme.colors.text}]}>Categories</Text>
-      <FlatList
-        data={categories}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      />
+      <Text style={[styles.header, { color: theme.colors.text }]}>Categories</Text>
+      {loadingSubjects ? (
+        renderSkeleton()
+      ) : (
+        <FlatList
+          data={categories}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 };
@@ -86,19 +107,19 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'black',
-    fontFamily:'ComicNeue-Bold',
-    fontSize:18
+    fontFamily: 'ComicNeue-Bold',
+    fontSize: 18,
   },
   selectedButtonText: {
     color: 'white',
   },
 
-  header:{
-    fontFamily:'ComicNeue-Bold',
-    fontSize:28,
-    paddingLeft:5,
-    marginBottom:10
-  }
+  header: {
+    fontFamily: 'ComicNeue-Bold',
+    fontSize: 28,
+    paddingLeft: 5,
+    marginBottom: 10,
+  },
 });
 
 export default memo(Categories);

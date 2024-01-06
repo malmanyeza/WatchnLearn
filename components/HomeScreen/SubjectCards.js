@@ -1,38 +1,49 @@
 import React,{memo} from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import  MaterialIcons  from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation } from '@react-navigation/native';
-import  Ionicons  from 'react-native-vector-icons/Ionicons';
 import Colors from '../../constants/Colors';
 import { useThemeContext } from '../../hooks/themeContext';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
-const SubjectCard = memo(({ subjectImage, subjectName, syllabus, rating, handleOnPress, enrollers }) => {
+const SubjectCard = memo(({ subjectImage, subjectName, syllabus,  handleOnPress }) => {
 
 
   const {theme} = useThemeContext()
-    const navigation = useNavigation();
+  const {width, height} = Dimensions.get('screen')
+
   return (
-    <TouchableOpacity onPress={handleOnPress} style={[
-      styles.cardContainer,
-      {backgroundColor:theme.colors.tetiaryBackground}
-      ]}>
-      <Image style={styles.cardImage} source={subjectImage} />
-      <View style={styles.cardTextContainer}>
-        <Text style={[
-          styles.subjectName,
-          {color:theme.colors.text}
-          ]}>{subjectName}</Text>
-        <View style={styles.syllabusContainer}>
-          <Text style={[
-            styles.syllabus,
-            {backgroundColor:theme.colors.secondaryBackground},
-            {color:theme.colors.text}
-            ]}>{syllabus}</Text>
-          <TouchableOpacity onPress={handleOnPress}>
-            <MaterialIcons name="arrow-forward" size={20} color={Colors.primary} />
-          </TouchableOpacity>   
+    
+    <TouchableOpacity
+      onPress={handleOnPress}
+      style={[styles.cardContainer, { backgroundColor: theme.colors.tetiaryBackground, height:height*0.3, width:width*0.7 }]}
+    >
+        <View
+        containerStyle={{ flex: 1, width: '100%', flexDirection: 'row', borderRadius: 20 }}
+        layout={[
+          { width: 150, height: 150, borderRadius: 20, margin: 8 },
+          { width: '60%', justifyContent: 'center', marginLeft: 10 },
+        ]}
+      >
+        <Image style={styles.cardImage} source={{ uri: subjectImage }} />
+        <View style={styles.cardTextContainer}>
+          <Text style={[styles.subjectName, { color: theme.colors.text }]}>{subjectName}</Text>
+          <View style={styles.syllabusContainer}>
+            <Text
+              style={[
+                styles.syllabus,
+                { backgroundColor: theme.colors.secondaryBackground },
+                { color: theme.colors.text },
+              ]}
+            >
+              {syllabus}
+            </Text>
+            <TouchableOpacity onPress={handleOnPress}>
+              <MaterialIcons name="arrow-forward" size={20} color={Colors.primary} />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
+      
     </TouchableOpacity>
   );
 });
@@ -44,14 +55,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3, // increased shadow opacity
     shadowRadius: 30,
     elevation: 5,
-    marginHorizontal:10,
-    marginRight:20,
-    marginBottom:10,
-    width: 250, // set card width to 60% of screen width
+    marginLeft:20,
   },
   cardImage: {
     borderRadius: 20, // increased border radius
-    height: 150,
+    height: '63%',
     margin: 8, // added margin to image
     shadowColor: '#000',
     shadowOpacity: 0.2, // added shadow opacity to image
@@ -101,17 +109,6 @@ const styles = StyleSheet.create({
   ratingText: {
     marginLeft: 5,
     fontSize: 16
-  },
-  header:{
-    marginHorizontal:10,
-    flexDirection:'row',
-    justifyContent:'space-between',
-    alignItems:'center',
-    marginBottom:20
-  },
-  seeAll:{
-    fontSize:14,
-    color:'gray'
   }
 });
 

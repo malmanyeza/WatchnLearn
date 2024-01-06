@@ -20,14 +20,13 @@ const EnrollingScreen = () => {
       ]
     }>
      <Header
-        title={item.subjectName}
+        title={item.name}
      />
      <CoverAndHeader
-        subjectImage={item.subjectImage}
-        subjectName={item.subjectName}
-        tutorAvatar={item.tutorAvatar}
-        tutorName={item.tutorName}
-        rating={item.rating}
+        subjectImage={item.subjectImageUrl}
+        subjectName={item.name}
+        tutorAvatar={item.tutor.image}
+        tutorName={item.tutor.name}
      />
      <Description
         descriptionText={item.description}

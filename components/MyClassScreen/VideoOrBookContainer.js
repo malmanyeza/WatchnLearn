@@ -20,8 +20,8 @@ const {theme} = useThemeContext()
         <Ionicons name="book-outline" size={24} color={theme.colors.text} />
       )}
       <View style={styles.infoContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subtitle}>{contentType==='video' ? 'Video' : 'Reading'}.({duration})</Text>
+        <Text style={[styles.title, {color: theme.colors.text}]}>{title}</Text>
+        <Text style={[styles.subtitle,{color: theme.colors.secondaryText}]}>{contentType==='video' ? 'Video' : 'Reading'}.({duration})</Text>
       </View>
       <TouchableOpacity>
         <Ionicons name="cloud-download-outline" size={24} color={theme.colors.text} />

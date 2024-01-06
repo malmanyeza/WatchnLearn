@@ -16,8 +16,8 @@ const {theme} = useThemeContext()
     }>
       <Ionicons name='newspaper-outline' size={24} color={theme.colors.text} />
       <View style={styles.infoContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subtitle}>{noOfQuestions} questions.({duration})</Text>
+        <Text style={[styles.title,{color: theme.colors.text}]}>{title}</Text>
+        <Text style={[styles.subtitle, {color: theme.colors.secondaryText}]}>{noOfQuestions} questions.({duration})</Text>
       </View>
       <TouchableOpacity>
         <Ionicons name="cloud-download-outline" size={24} color={theme.colors.text} />

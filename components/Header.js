@@ -27,10 +27,9 @@ const Header = ({title, navigateTo}) => {
         styles.backButton
         ]} onPress={onBackPress}>
         <View style={[
-          styles.backButtonCircle,
-          {backgroundColor:theme.colors.tetiaryBackground}
+          styles.backButtonCircle
           ]}>
-          <Ionicons name="chevron-back" size={24} color='white' />
+          <Ionicons name="chevron-back" size={24} color={theme.colors.secondaryText} />
         </View>
       </TouchableOpacity>
       <Text style={[

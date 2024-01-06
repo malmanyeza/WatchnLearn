@@ -1,18 +1,41 @@
-import React, {memo} from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
- 
-const Header = () => {
-    const userName = 'Malvern'
-    const userAvatar = require('../../assets/images/Malvern.jpg')
-  return (
+import React, { memo } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import FontAwesome from 'react-native-vector-icons/Ionicons';
+import { useThemeContext } from '../../hooks/themeContext';
+import { useAllSubjectsContext } from '../../hooks/allSubjectsContext';
+
+const Header = ({ loading }) => {
+  const { theme } = useThemeContext();
+  const userName = 'Malvern';
+  const {loadingSubjects} = useAllSubjectsContext()
+
+
+  const renderSkeleton = () => (
+    <SkeletonPlaceholder backgroundColor={theme.colors.tetiaryBackground} highlightColor={theme.colors.primaryBackground}>
+      <SkeletonPlaceholder.Item flexDirection="row" justifyContent='space-between'>
+      <SkeletonPlaceholder.Item>
+        <SkeletonPlaceholder.Item width={60} height={20} borderRadius={10} marginLeft={20} marginBottom={10} />
+        <SkeletonPlaceholder.Item width={120} height={30} borderRadius={15} marginLeft={20}/>
+      </SkeletonPlaceholder.Item>
+      <SkeletonPlaceholder.Item width={40} height={40} borderRadius={20} marginRight={20} />
+      </SkeletonPlaceholder.Item>
+    </SkeletonPlaceholder>
+  );
+
+  const renderContent = () => (
     <View style={styles.container}>
       <View style={styles.userInfo}>
-        <Text style={styles.welcomeText}>Welcome</Text>
-        <Text style={styles.userName}>{userName}</Text>
+        <Text style={[styles.welcomeText, { color: theme.colors.text }]}>Welcome</Text>
+        <Text style={[styles.userName, { color: theme.colors.text }]}>{userName}</Text>
       </View>
-      <Image source={ userAvatar } style={styles.avatar} />
+      <View style={[styles.avatar, { backgroundColor: theme.colors.tetiaryBackground }]}>
+        <FontAwesome name="person" size={25} color={theme.colors.secondaryText} />
+      </View>
     </View>
   );
+
+  return loadingSubjects ? renderSkeleton() : renderContent();
 };
 
 const styles = StyleSheet.create({
@@ -22,19 +45,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingTop: 10,
     paddingHorizontal: 10,
+    paddingLeft: 20,
   },
   welcomeText: {
     fontSize: 14,
-    color: 'gray',
+    fontFamily: 'ComicNeue-Bold',
   },
   userName: {
     fontSize: 20,
-    fontWeight: 'bold'
+    fontFamily: 'ComicNeue-Bold',
   },
   avatar: {
     width: 40,
     height: 40,
     borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

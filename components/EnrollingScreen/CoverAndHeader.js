@@ -7,12 +7,12 @@ const {width ,height} = Dimensions.get('window')
 const CoverAndHeader = ({ subjectImage, subjectName, tutorName, tutorAvatar, rating }) => {
   return (
     <View style={styles.container}>
-      <Image source={subjectImage} style={styles.coverImage} />
+      <Image source={{uri:subjectImage}} style={styles.coverImage} />
       <View style={styles.nameAndRating}>
         <Text style={styles.subjectName}>{subjectName}</Text>
       </View>
       <View style={styles.tutorInfoContainer}>
-        <Image source={tutorAvatar} style={styles.tutorAvatar} />
+        <Image source={{uri:tutorAvatar}} style={styles.tutorAvatar} />
         <Text style={styles.tutorName}>{tutorName}</Text>
       </View>
     </View>

@@ -47,7 +47,7 @@ const HomeTabs = () => {
 
   <Tab.Navigator
           shifting={true}
-          barStyle={{ backgroundColor: colorScheme=== 'dark'?"black":'white' , height:70 }}
+          barStyle={{ backgroundColor: colorScheme=== 'dark'?"black":'#FAFAFA' , height:70 }}
           activeColor={colorScheme=== 'dark'?"white":'gray'}
           inactiveColor='gray'
         >
@@ -107,7 +107,7 @@ export default function App() {
         <ContentProvider>
         <ThemeProvider>
           <NavigationContainer>
-            <StatusBar backgroundColor={ initialTheme==='dark'?'black':"white"} barStyle={contentColor} />
+            <StatusBar backgroundColor={ initialTheme==='dark'?'black':"#FAFAFA"} barStyle={contentColor} />
             <Stack.Navigator>
               <Stack.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
               <Stack.Screen name="PopularClasses" component={PopularClassesScreen} options={{ headerShown: false }} />
