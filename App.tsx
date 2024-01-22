@@ -37,7 +37,7 @@ const HomeTabs = () => {
     // Delay for 2 seconds (2000 milliseconds) before hiding the splash screen
     const timeoutId = setTimeout(() => {
       SplashScreen.hide();
-    }, 1000);
+    }, 900);
     LogBox.ignoreAllLogs()
     // Clear the timeout if the component unmounts before the delay completes
     return () => clearTimeout(timeoutId);
@@ -109,7 +109,9 @@ export default function App() {
           <NavigationContainer>
             <StatusBar backgroundColor={ initialTheme==='dark'?'black':"#FAFAFA"} barStyle={contentColor} />
             <Stack.Navigator>
+              
               <Stack.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
+              <Stack.Screen name="MyProfile" component={MyProfileScreen} options={{headerShown:false}} />
               <Stack.Screen name="PopularClasses" component={PopularClassesScreen} options={{ headerShown: false }} />
               <Stack.Screen name="Enrolling" component={EnrollingScreen} options={{headerShown:false}}/>
               <Stack.Screen name="MyClass" component={MyClassScreen} options={{headerShown:false}} />

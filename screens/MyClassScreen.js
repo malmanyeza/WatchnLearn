@@ -1,7 +1,7 @@
 import React, {memo} from 'react';
 import { View, Text, StyleSheet, StatusBar } from 'react-native';
 import WeeksList from '../components/MyClassScreen/WeeksList';
-import Header from '../components/Header';
+import MyClassesAndMyClassHeader from '../components/MyClassesAndMyHeader';
 import ContentList from '../components/MyClassScreen/ContentSectionList';
 import Zindex from '../components/MyClassScreen/Z-IndexButton';
 import { useThemeContext } from '../hooks/themeContext';
@@ -17,7 +17,7 @@ const {theme} = useThemeContext()
         {backgroundColor:theme.colors.primaryBackground}
       ]
     }>
-        <Header
+        <MyClassesAndMyClassHeader
             title={"My Class"}
         />
         <WeeksList/>

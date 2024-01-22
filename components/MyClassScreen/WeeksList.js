@@ -27,9 +27,9 @@ const WeeksList = () => {
     >
       <Text
         style={{
-          fontFamily: 'ComicNeue-Bold',
+          fontFamily:activeWeek === item.id ? 'ComicNeue-Bold':'ComicNeue-Regular',
           color: activeWeek === item.id ? 'white' : theme.colors.text,
-          fontWeight: activeWeek === item.id ? 'bold' : 'normal',
+          fontSize:18
         }}
       >
         WEEK {item.id}

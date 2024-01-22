@@ -1,32 +1,27 @@
 import React, {memo} from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import Header from '../components/Header';
-import SubHeader from '../components/MyProfileScreen/SubHeader';
-import MySubscriptions from '../components/MyProfileScreen/MySubscriptions';
-import LogOutButton from '../components/MyProfileScreen/LogoutButton';
+import { View, Text, StyleSheet, ScrollView, StatusBar} from 'react-native';
+import ProfileHeader from '../components/MyProfileScreen/ProfileHeader';
 import { useThemeContext } from '../hooks/themeContext';
+import Statistics from '../components/MyProfileScreen/Statistics';
+import Achievements from '../components/MyProfileScreen/Achievements';
+import Header from '../components/Header';
+import FriendSuggestionList from '../components/MyProfileScreen/FriendSuggestionList';
 
 const MyProfileScreen = () => {
 
   const {theme} = useThemeContext()
   return (
-    <ScrollView 
-     nestedScrollEnabled={true}
-     style={[
-      styles.container,
-      {backgroundColor:theme.colors.primaryBackground}
-      ]}>
+    <View style={[styles.container,{backgroundColor:theme.colors.primaryBackground}]}>
       <Header
-        title={'Profile'}
+          title ={'Profile'}
       />
-      <SubHeader
-        name={'Malvern'}
-        surname={'Manyeza'}
-        emailAdress={'malmanyeza@gmail.com'}
-      />
-      <MySubscriptions/>
-      <LogOutButton/>
-    </ScrollView>
+      <ScrollView>
+        <ProfileHeader/>
+        <Statistics/>
+        <Achievements/>
+        <FriendSuggestionList/>
+      </ScrollView>
+    </View>
   );
 };
 

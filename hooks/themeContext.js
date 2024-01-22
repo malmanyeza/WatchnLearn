@@ -10,7 +10,7 @@ export const ThemeProvider = ({ children }) => {
       primary: 'rgb(255, 45, 85)',
       primaryBackground: '#000',
       secondaryBackground: '#222222',
-      tetiaryBackground: '#222222',
+      tetiaryBackground: '#424242',
       card: 'rgb(255, 255, 255)',
       text: 'white',
       secondaryText:'lightgray',
@@ -23,9 +23,9 @@ export const ThemeProvider = ({ children }) => {
   const lightTheme = {
     dark: false,
     colors: {
-      primaryBackground: '#DEDEDE',
+      primaryBackground: '#FAFAFA',
       secondaryBackground: 'rgb(242, 242, 242)',
-      tetiaryBackground:'#FAFAFA',
+      tetiaryBackground:'#E0E0E0',
       card: 'rgb(255, 255, 255)',
       text: 'black',
       secondaryText:'gray',

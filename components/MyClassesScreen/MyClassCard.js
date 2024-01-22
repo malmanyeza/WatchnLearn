@@ -15,7 +15,7 @@ const {theme} = useThemeContext()
   return (
     <TouchableOpacity onPress={goToClass} style={[
       styles.container,
-      {backgroundColor:theme.colors.tetiaryBackground}
+      {borderColor:theme.colors.tetiaryBackground}
       ]}>
       <Image source={subjectImage} style={styles.image} />
       <View style={styles.infoContainer}>
@@ -41,11 +41,12 @@ const styles = StyleSheet.create({
     height: height*0.20,
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 15,
+    borderRadius: 20,
     marginRight:20,
     marginTop: 15,
     marginBottom:20,
-    elevation: 5,
+    borderBottomWidth:5,
+    borderWidth:2
   },
   image: {
     width: '40%',
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
   },
   form: {
     fontFamily:'ComicNeue-Bold',
-    fontSize: 25,
+    fontSize: 20,
     marginBottom:5,
   },
   termContainer:{
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
   },
   term: {
     fontFamily:'ComicNeue-Bold',
-    fontSize: 22,
+    fontSize: 20,
     marginTop: 5,
     marginBottom:10
   },

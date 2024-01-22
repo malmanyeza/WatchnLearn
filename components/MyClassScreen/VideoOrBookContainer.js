@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 20,
+    paddingVertical: 25,
     backgroundColor: 'white',
   },
   infoContainer: {
@@ -45,11 +45,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily:'ComicNeue-Bold',
-    fontSize: 17,
+    fontSize: 20,
   },
   subtitle: {
     fontFamily:'ComicNeue-Bold',
-    fontSize: 15,
+    fontSize: 18,
     color: '#666',
   },
 });
