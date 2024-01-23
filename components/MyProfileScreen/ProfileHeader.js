@@ -25,8 +25,8 @@ const {theme} = useThemeContext()
               </View>
             </View>
             <View style={styles.followContainer} >
-                <Text style={styles.followText} >5 Folling</Text>
-                <Text style={styles.followText} >4 Followers</Text>
+                <Text style={styles.followText} >5 Followers</Text>
+                <Text style={styles.followText} >4 Following</Text>
             </View>
             <View style={styles.addfriendsAndShareButton}>
                 <TouchableOpacity style={[styles.addfriendsButton,{borderColor:theme.colors.tetiaryBackground}]}>

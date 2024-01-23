@@ -12,7 +12,7 @@ const {theme} = useThemeContext()
     return(
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={styles.headerText}>Friend suggestions</Text>
+                <Text style={[styles.headerText,{color:theme.colors.text}]}>Friend suggestions</Text>
                 <TouchableOpacity>
                     <Text style={styles.viewAllText}>VIEW ALL</Text>
                 </TouchableOpacity>

@@ -13,7 +13,7 @@ const {theme} = useThemeContext()
     return(
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={styles.headerText}>Achievements</Text>
+                <Text style={[styles.headerText,{color:theme.colors.text}]}>Achievements</Text>
                 <TouchableOpacity>
                     <Text style={styles.viewAllText}>VIEW ALL</Text>
                 </TouchableOpacity>

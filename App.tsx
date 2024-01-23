@@ -17,6 +17,7 @@ import QuestionsFeedbackScreen from './screens/QuestionsFeedbackScreen';
 import QuestionScreen from './screens/QuestionScreen';
 import FeedbackScreen from './screens/FeedbackScreen';
 import QuestionPapersScreen from './screens/QuestionPapersScreen';
+import LeaderBoardScreen from './screens/LeaderBoardScreen';
 import { SubjectProvider } from './hooks/subjectDetailsConst';
 import { AllSubjectsProvider } from './hooks/allSubjectsContext';
 import { ContentProvider } from './hooks/contentContext';
@@ -70,6 +71,15 @@ const HomeTabs = () => {
             }}
           />
           <Tab.Screen
+            name="LeaderBoard"
+            component={LeaderBoardScreen}
+            options={{
+              tabBarIcon: ({ focused, color }) => (
+                <Ionicons name={focused ? 'shield' : 'shield-outline'} size={24} color={color} />
+              ),
+            }}
+          />
+          <Tab.Screen
             name="MyProfile"
             component={MyProfileScreen}
             options={{
@@ -87,6 +97,7 @@ const HomeTabs = () => {
               ),
             }}
           />
+          
         </Tab.Navigator>
 )};
 

@@ -47,7 +47,7 @@ const MyClassesAndMyClassHeader = ({title, navigateTo}) => {
         </View>
         <View style={styles.iconContainer}>
           <Image
-            source={require('../assets/images/icons8-flame-64.png')}
+            source={require('../assets/images/icons8-emerald-96.png')}
             style={styles.icon}
           />
           <Text style={[styles.iconText,{color:theme.colors.secondaryText}]}>194</Text>
