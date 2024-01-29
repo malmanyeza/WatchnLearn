@@ -1,8 +1,8 @@
 import React, {memo} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Header from '../components/Header'
-import MessagesList from '../components/NotificationScreen/MessagesList';
 import { useThemeContext } from '../hooks/themeContext';
+import NotificationContainer from '../components/NotificationScreen/NotificationContainer';
 
 const NotificationsScreen = () => {
 
@@ -18,7 +18,7 @@ const {theme} = useThemeContext()
       <Header
        title={'Notifications'}
       />
-      <MessagesList/>
+     <NotificationContainer/>
     </View>
   );
 };

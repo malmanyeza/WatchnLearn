@@ -9,18 +9,8 @@ const SubHeader = ()=>{
 
     return(
         <View style={styles.container}>
-            <View>
-               <Text style={styles.name}>{name} {surname}</Text>
-               <Text>{emailAdress}</Text>
-            </View>
-           { image? (<Image source={image} style={styles.imageAvator}/>)
-           :
-            (<View style={styles.letterAvator}>
-                <Text style={styles.initialLetter}>
-                    {initialLetter}
-                </Text>
-            </View>)
-            }
+           <Text>Malvern</Text>
+           <Text></Text>
         </View>
     )
 }
