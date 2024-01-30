@@ -3,7 +3,7 @@ import { View, Image, StyleSheet, TouchableOpacity,Text, SafeAreaView } from 're
 import Ionicons  from 'react-native-vector-icons/Ionicons';
 import Colors from '../../constants/Colors';
 
-const Zindex = () =>{
+const Zindex = ({}) =>{
 
     const [isOpen, setIsOpen] = useState(false)
 
@@ -43,16 +43,12 @@ export default Zindex;
 
 const styles = StyleSheet.create({
     mainContainer:{
-        position: 'absolute',
-        top: 15,
-        right: 10,
     },
     circleContainer: {
-       
+         
         width: 35,
         height: 35,
         borderRadius: 25,
-        overflow: 'hidden',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.6)',
@@ -60,8 +56,9 @@ const styles = StyleSheet.create({
         borderColor:Colors.primary
       },
     boxContainer:{
+        position:'absolute',
+        right:0,
         borderRadius: 15,
-        overflow: 'hidden',
         justifyContent: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.6)',
         borderWidth:1,

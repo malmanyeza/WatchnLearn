@@ -2,10 +2,10 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import  Ionicons  from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import Colors from '../constants/Colors';
-import { useThemeContext } from '../hooks/themeContext';
+import Colors from '../../constants/Colors';
+import { useThemeContext } from '../../hooks/themeContext';
 
-const MyClassesAndMyClassHeader = ({title, navigateTo}) => {
+const MyClassesHeader = ({title, navigateTo}) => {
 
   const {theme} = useThemeContext()
 
@@ -35,26 +35,26 @@ const MyClassesAndMyClassHeader = ({title, navigateTo}) => {
         <Text style={[
           styles.title,
           {color:theme.colors.text}
-          ]}>{title}</Text>
+          ]}>{title}</Text> 
       </View>
       <View style={styles.lowerContain}>
         <View style={styles.iconContainer}>
           <Image
-            source={require('../assets/images/icons8-flame-94.png')}
+            source={require('../../assets/images/icons8-flame-94.png')}
             style={styles.icon}
           />
           <Text style={styles.iconText}>13</Text>
         </View>
         <View style={styles.iconContainer}>
           <Image
-            source={require('../assets/images/icons8-emerald-96.png')}
+            source={require('../../assets/images/icons8-emerald-96.png')}
             style={styles.icon}
           />
           <Text style={[styles.iconText,{color:theme.colors.secondaryText}]}>194</Text>
         </View>
         <View style={styles.iconContainer}>
           <Image
-            source={require('../assets/images/icons8-heart-96.png')}
+            source={require('../../assets/images/icons8-heart-96.png')}
             style={styles.icon}
           />
           <Text style={styles.iconText}>4</Text>
@@ -67,7 +67,8 @@ const MyClassesAndMyClassHeader = ({title, navigateTo}) => {
 const styles = StyleSheet.create({
   outerContainer:{
     borderBottomWidth:2,
-    marginBottom:20
+    marginBottom:20,
+    paddingHorizontal:10
   },
   container: {
     flexDirection: 'row',
@@ -79,6 +80,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 10,
     zIndex: 1,
+    width: 35,
+    height: 35,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   backButtonCircle: {
     width: 35,
@@ -90,6 +96,8 @@ const styles = StyleSheet.create({
     borderWidth:1,
   },
   title: {
+    justifyContent:'center',
+    alignItems:'center',
     fontSize: 28,
     fontFamily:'ComicNeue-Bold',
   },
@@ -115,4 +123,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default MyClassesAndMyClassHeader;
+export default MyClassesHeader;

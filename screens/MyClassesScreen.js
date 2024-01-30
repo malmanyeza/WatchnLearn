@@ -1,8 +1,8 @@
 import React,{memo} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import MyClassesAndMyClassHeader from '../components/MyClassesAndMyHeader';
 import MyClassesList from '../components/MyClassesScreen/MyClassesList';
 import { useThemeContext } from '../hooks/themeContext';
+import MyClassesHeader from '../components/MyClassesScreen/MyClassesHeader';
 
 const MyClassesScreen = () => {
 
@@ -13,7 +13,7 @@ const MyClassesScreen = () => {
       styles.container,
       {backgroundColor:theme.colors.primaryBackground}
       ]}>
-      <MyClassesAndMyClassHeader
+      <MyClassesHeader
         title={'My Classes'}
       />
       <MyClassesList/>

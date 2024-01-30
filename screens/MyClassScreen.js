@@ -1,10 +1,10 @@
 import React, {memo} from 'react';
 import { View, Text, StyleSheet, StatusBar } from 'react-native';
 import WeeksList from '../components/MyClassScreen/WeeksList';
-import MyClassesAndMyClassHeader from '../components/MyClassesAndMyHeader';
 import ContentList from '../components/MyClassScreen/ContentSectionList';
 import Zindex from '../components/MyClassScreen/Z-IndexButton';
 import { useThemeContext } from '../hooks/themeContext';
+import MyClassHeader from '../components/MyClassScreen/MyClassHeader';
 
 const MyClassScreen = () => {
 
@@ -17,12 +17,11 @@ const {theme} = useThemeContext()
         {backgroundColor:theme.colors.primaryBackground}
       ]
     }>
-        <MyClassesAndMyClassHeader
+        <MyClassHeader
             title={"My Class"}
         />
         <WeeksList/>
         <ContentList/>
-        <Zindex/>
     </View>
   );
 };

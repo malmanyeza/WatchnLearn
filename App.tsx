@@ -18,9 +18,12 @@ import QuestionScreen from './screens/QuestionScreen';
 import FeedbackScreen from './screens/FeedbackScreen';
 import QuestionPapersScreen from './screens/QuestionPapersScreen';
 import LeaderBoardScreen from './screens/LeaderBoardScreen';
+import EmailAndPasswordScreen from './screens/LoginAndSignUpScreens/EmailAndPasswordScreen';
+import UserNameScreen from './screens/LoginAndSignUpScreens/UserNameScreen';
 import { SubjectProvider } from './hooks/subjectDetailsConst';
 import { AllSubjectsProvider } from './hooks/allSubjectsContext';
 import { ContentProvider } from './hooks/contentContext';
+import { UserDataProvider } from './hooks/userDataContext';
 import { useTheme } from 'react-native-paper';
 import { ThemeProvider } from './hooks/themeContext';
 import SplashScreen from 'react-native-splash-screen';
@@ -71,15 +74,6 @@ const HomeTabs = () => {
             }}
           />
           <Tab.Screen
-            name="LeaderBoard"
-            component={LeaderBoardScreen}
-            options={{
-              tabBarIcon: ({ focused, color }) => (
-                <Ionicons name={focused ? 'shield' : 'shield-outline'} size={24} color={color} />
-              ),
-            }}
-          />
-          <Tab.Screen
             name="MyProfile"
             component={MyProfileScreen}
             options={{
@@ -112,7 +106,7 @@ export default function App() {
   theme.colors.secondaryContainer= 'transparent'
 
   return (
-    
+    <UserDataProvider>
     <AllSubjectsProvider>
       <SubjectProvider>
         <ContentProvider>
@@ -132,12 +126,14 @@ export default function App() {
               <Stack.Screen name="QuestionsFeedback" component={QuestionsFeedbackScreen} options={{headerShown:false}}/>
               <Stack.Screen name="Feedback" component={FeedbackScreen} options={{headerShown:false}}/>
               <Stack.Screen name="QuestionPapers" component={QuestionPapersScreen} options={{headerShown: false}} />
+              <Stack.Screen name="LeaderBoard" component={LeaderBoardScreen} options={{headerShown: false}} />
             </Stack.Navigator>
           </NavigationContainer>
           </ThemeProvider>
         </ContentProvider>
       </SubjectProvider>
     </AllSubjectsProvider>
+    </UserDataProvider>
     
   );
 }
