@@ -8,18 +8,7 @@ import HomeScreen from './screens/HomeScreen';
 import MyClassesScreen from './screens/MyClassesScreen';
 import MyProfileScreen from './screens/MyProfileScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
-import PopularClassesScreen from './screens/PopularClassesScreen';
-import EnrollingScreen from './screens/EnrolligScreen';
-import MyClassScreen from './screens/MyClassScreen';
-import VideoScreen from './screens/VideoScreen';
-import PDFScreen from './screens/PDFScreen';
-import QuestionsFeedbackScreen from './screens/QuestionsFeedbackScreen';
-import QuestionScreen from './screens/QuestionScreen';
-import FeedbackScreen from './screens/FeedbackScreen';
-import QuestionPapersScreen from './screens/QuestionPapersScreen';
-import LeaderBoardScreen from './screens/LeaderBoardScreen';
-import EmailAndPasswordScreen from './screens/LoginAndSignUpScreens/EmailAndPasswordScreen';
-import UserNameScreen from './screens/LoginAndSignUpScreens/UserNameScreen';
+import { Stacks } from './Stacks';
 import { SubjectProvider } from './hooks/subjectDetailsConst';
 import { AllSubjectsProvider } from './hooks/allSubjectsContext';
 import { ContentProvider } from './hooks/contentContext';
@@ -28,10 +17,10 @@ import { useTheme } from 'react-native-paper';
 import { ThemeProvider } from './hooks/themeContext';
 import SplashScreen from 'react-native-splash-screen';
 
-const Stack = createStackNavigator();
+
 const Tab = createMaterialBottomTabNavigator();
 
-const HomeTabs = () => {
+export const HomeTabs = () => {
 
   const colorScheme = useColorScheme();
   
@@ -41,7 +30,7 @@ const HomeTabs = () => {
     // Delay for 2 seconds (2000 milliseconds) before hiding the splash screen
     const timeoutId = setTimeout(() => {
       SplashScreen.hide();
-    }, 900);
+    }, 2000);
     LogBox.ignoreAllLogs()
     // Clear the timeout if the component unmounts before the delay completes
     return () => clearTimeout(timeoutId);
@@ -98,6 +87,16 @@ const HomeTabs = () => {
 
 export default function App() {
 
+  useEffect(() => {
+    // Delay for 2 seconds (2000 milliseconds) before hiding the splash screen
+    const timeoutId = setTimeout(() => {
+      SplashScreen.hide();
+    }, 2000);
+    LogBox.ignoreAllLogs()
+    // Clear the timeout if the component unmounts before the delay completes
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   const colorScheme = useColorScheme();
   const initialTheme = colorScheme 
   const contentColor = colorScheme === 'dark' ? 'light-content' : 'dark-content';
@@ -113,21 +112,7 @@ export default function App() {
         <ThemeProvider>
           <NavigationContainer>
             <StatusBar backgroundColor={ initialTheme==='dark'?'black':"#FAFAFA"} barStyle={contentColor} />
-            <Stack.Navigator>
-              
-              <Stack.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
-              <Stack.Screen name="MyProfile" component={MyProfileScreen} options={{headerShown:false}} />
-              <Stack.Screen name="PopularClasses" component={PopularClassesScreen} options={{ headerShown: false }} />
-              <Stack.Screen name="Enrolling" component={EnrollingScreen} options={{headerShown:false}}/>
-              <Stack.Screen name="MyClass" component={MyClassScreen} options={{headerShown:false}} />
-              <Stack.Screen name="Video" component={VideoScreen} options={{headerShown:false}}/>
-              <Stack.Screen name="PDF" component={PDFScreen} options={{headerShown:false}}/>
-              <Stack.Screen name="Quize" component={QuestionScreen} options={{headerShown:false}}/>
-              <Stack.Screen name="QuestionsFeedback" component={QuestionsFeedbackScreen} options={{headerShown:false}}/>
-              <Stack.Screen name="Feedback" component={FeedbackScreen} options={{headerShown:false}}/>
-              <Stack.Screen name="QuestionPapers" component={QuestionPapersScreen} options={{headerShown: false}} />
-              <Stack.Screen name="LeaderBoard" component={LeaderBoardScreen} options={{headerShown: false}} />
-            </Stack.Navigator>
+            <Stacks/>
           </NavigationContainer>
           </ThemeProvider>
         </ContentProvider>

@@ -4,7 +4,7 @@ import ProfileHeader from '../components/MyProfileScreen/ProfileHeader';
 import { useThemeContext } from '../hooks/themeContext';
 import Statistics from '../components/MyProfileScreen/Statistics';
 import Achievements from '../components/MyProfileScreen/Achievements';
-import Header from '../components/Header';
+import MyProfileHeader from '../components/MyProfileScreen/MyProfileHeader';
 import FriendSuggestionList from '../components/MyProfileScreen/FriendSuggestionList';
 
 const MyProfileScreen = () => {
@@ -12,7 +12,7 @@ const MyProfileScreen = () => {
   const {theme} = useThemeContext()
   return (
     <View style={[styles.container,{backgroundColor:theme.colors.primaryBackground}]}>
-      <Header
+      <MyProfileHeader
           title ={'Profile'}
       />
       <ScrollView>

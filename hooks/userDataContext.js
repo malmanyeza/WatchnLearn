@@ -1,69 +1,118 @@
 import React, { useState, useEffect } from 'react';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
+import { addDoc, collection, getDocs, where, query } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { set } from 'react-native-reanimated';
 
 const UserDataContext = React.createContext();
 
 export const UserDataProvider = ({ children }) => {
- 
   const [userDetails, setUserDetails] = useState({
     firstName: '',
-    surname: '',
+    lastName: '',
     phone: '',
     email: '',
-    school: ''
+    school: '',
+    password: '',
   });
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loadingUser, setLoadingUser] = useState(true);
+  const [loadingUser, setLoadingUser] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
       setUser(authUser);
       setIsLoggedIn(!!authUser);
+
+      if (authUser) {
+        // User is logged in, try to get user data from AsyncStorage
+        try {
+          const userData = await AsyncStorage.getItem('userData');
+          if (userData) {
+            setUserDetails(JSON.parse(userData));
+          } else {
+            // If userData is not in AsyncStorage, fetch it from Firestore and store in AsyncStorage
+            try {
+              const q = query(collection(db, 'students'), where('userId', '==', authUser.uid));
+              const querySnapshot = await getDocs(q);
+              if (!querySnapshot.empty) {
+                const userDoc = querySnapshot.docs[0].data();
+                setUserDetails(userDoc);
+                await AsyncStorage.setItem('userData', JSON.stringify(userDoc));
+              }
+            } catch (firestoreError) {
+              // Handle Firestore error
+              console.error('Error fetching user data from Firestore:', firestoreError.message);
+            }
+          }
+        } catch (asyncStorageError) {
+          // Handle AsyncStorage error
+          console.error('Error fetching user data from AsyncStorage:', asyncStorageError.message);
+        }
+      }
     });
 
     return () => unsubscribe();
   }, []);
 
-  const signUpWithEmailAndPassword = async (email, password) => {
+  const signUpWithEmailAndPassword = async () => {
     try {
       setLoadingUser(true);
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      
-      // Assuming userDetails is an object with properties like firstName, Surname, Phone, email, and School
-      const { firstName, surname, phone, school } = userDetails;
+      const userCredential = await createUserWithEmailAndPassword(auth, userDetails.email, userDetails.password);
 
-      // Add user details to Firestore in the "students" collection
-      await firestore.collection('students').add({
-        firstName,
-        surname,
-        phone,
-        email,
-        school,
-        userId: userCredential.user.uid, // Optionally, you can store the user's ID for future reference
-      });
+      const { firstName, lastName, phone, school, email } = userDetails;
+
+      try {
+        const docRef = await addDoc(collection(db, 'students'), {
+          firstName,
+          lastName,
+          phone,
+          email,
+          school,
+          userId: userCredential.user.uid,
+        });
+
+        console.log('User details added with ID:', docRef.id);
+        await AsyncStorage.setItem('userData', JSON.stringify(userDetails));
+      } catch (firestoreError) {
+        throw new Error(`Error adding user details to Firestore: ${firestoreError.message}`);
+      }
 
       setUser(userCredential.user);
+
+      try {
+        await signInWithEmailAndPassword(auth, userDetails.email, userDetails.password);
+      } catch (signInError) {
+        throw new Error(`Error signing in user: ${signInError.message}`);
+      }
+
       setIsLoggedIn(true);
       setLoadingUser(false);
     } catch (error) {
-      console.error('Error signing up:', error.message);
-      throw error;
+      alert(error.message);
+      setLoadingUser(false);
     }
   };
 
-
-  const signInWithEmailAndPassword = async (email, password) => {
+  const signInWithBothEmailAndPassword = async () => {
     try {
       setLoadingUser(true);
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      setUser(userCredential.user);
+      await signInWithEmailAndPassword(auth, userDetails.email, userDetails.password);
       setIsLoggedIn(true);
       setLoadingUser(false);
     } catch (error) {
-      console.error('Error signing in:', error.message);
-      throw error;
+      alert(error.message);
+      setLoadingUser(false);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await auth.signOut();
+      setIsLoggedIn(false);
+    } catch (error) {
+      console.error('Error logging out:', error.message);
     }
   };
 
@@ -71,10 +120,11 @@ export const UserDataProvider = ({ children }) => {
     user,
     isLoggedIn,
     signUpWithEmailAndPassword,
-    signInWithEmailAndPassword,
+    signInWithBothEmailAndPassword,
     loadingUser,
     userDetails,
-    setUserDetails
+    setUserDetails,
+    logout,
   };
 
   return (

@@ -5,14 +5,15 @@ import { useThemeContext } from '../../hooks/themeContext';
 import Colors from '../../constants/Colors';
 import CustomButton from '../../components/LoginAndSignUpComponents/CustomButton'; // Import the CustomButton component
 import { useUserDataContext } from '../../hooks/userDataContext';
+import { useNavigation } from '@react-navigation/native';
 
 const EmailAndPasswordScreen = () => {
   const { theme } = useThemeContext();
+  const navigation = useNavigation();
 
-  const { signUpWithEmailAndPassword, signInWithEmailAndPassword,} = useUserDataContext();
+  const { signInWithBothEmailAndPassword, userDetails, setUserDetails} = useUserDataContext();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   const [isLogin, setIsLogin] = useState(false); // Track whether it's a login or sign-up
@@ -22,15 +23,15 @@ const EmailAndPasswordScreen = () => {
   };
 
   const signIn = () => {
-    signInWithEmailAndPassword(email, password);
+    signInWithBothEmailAndPassword();
   };
 
   const signUp = () => {
-    signUpWithEmailAndPassword(email, password);
+    navigation.navigate('UserName');
   };
 
   const handlePasswordChange = (text) => {
-    setPassword(text);
+    setUserDetails({...userDetails, password: text});
     // Validate password length
     if (text.length >= 8) {
       setPasswordError('');
@@ -39,8 +40,7 @@ const EmailAndPasswordScreen = () => {
     }
   };
 
-  // Determine if the button is active based on email and password validation
-  const isButtonActive = email.length > 0 && password.length >= 8 && !passwordError;
+  
 
   const toggleAuthMode = () => {
     setIsLogin(!isLogin);
@@ -52,8 +52,8 @@ const EmailAndPasswordScreen = () => {
       <TextInput
         style={[styles.input, { color: theme.colors.text }]}
         placeholder="Email"
-        onChangeText={(text) => setEmail(text)}
-        value={email}
+        onChangeText={(text) => setUserDetails({...userDetails, email: text})}
+        value={userDetails.email}
         placeholderTextColor={theme.colors.secondaryText}
       />
 
@@ -64,7 +64,7 @@ const EmailAndPasswordScreen = () => {
           placeholder="Password"
           secureTextEntry={!showPassword}
           onChangeText={handlePasswordChange}
-          value={password}
+          value={userDetails.password}
           placeholderTextColor={theme.colors.secondaryText}
         />
         <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIconContainer}>
@@ -77,7 +77,7 @@ const EmailAndPasswordScreen = () => {
 
       {/* CustomButton with isActive prop based on validation */}
       <CustomButton
-        isActive={isButtonActive}
+        isActive={userDetails.email.length > 0 && userDetails.password.length >= 8 && !passwordError}
         title={isLogin ? 'Login' : 'Sign Up'}
         onPress={() => (isLogin ? signIn() : signUp())}
       />

@@ -3,16 +3,15 @@ import { View, TextInput, StyleSheet, Text } from 'react-native';
 import CustomButton from '../../components/LoginAndSignUpComponents/CustomButton';
 import { useThemeContext } from '../../hooks/themeContext';
 import Colors from '../../constants/Colors';
+import { useUserDataContext } from '../../hooks/userDataContext';
 
 const UserNameScreen = () => {
   const { theme } = useThemeContext();
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const {userDetails, setUserDetails,signUpWithEmailAndPassword } = useUserDataContext();
 
   const handleContinue = () => {
-    // Perform any action when Continue button is pressed
-    console.log('Continue button pressed');
+    signUpWithEmailAndPassword();
   };
 
   return (
@@ -23,8 +22,8 @@ const UserNameScreen = () => {
       <TextInput
         style={[styles.input, { color: theme.colors.text }]}
         placeholder="First Name"
-        onChangeText={(text) => setFirstName(text)}
-        value={firstName}
+        onChangeText={(text) => setUserDetails({...userDetails, firstName: text})}
+        value={userDetails.firstName}
         placeholderTextColor={theme.colors.secondaryText}
       />
 
@@ -32,14 +31,14 @@ const UserNameScreen = () => {
       <TextInput
         style={[styles.input, { color: theme.colors.text }]}
         placeholder="Last Name"
-        onChangeText={(text) => setLastName(text)}
-        value={lastName}
+        onChangeText={(text) => setUserDetails({...userDetails, lastName: text})}
+        value={userDetails.lastName}
         placeholderTextColor={theme.colors.secondaryText}
       />
 
       {/* CustomButton with title "Continue" */}
       <CustomButton
-        isActive={firstName.length > 0 && lastName.length > 0}
+        isActive={userDetails.firstName.length > 0 && userDetails.lastName.length > 0}
         title="Continue"
         onPress={handleContinue}
       />

@@ -4,10 +4,11 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import FontAwesome from 'react-native-vector-icons/Ionicons';
 import { useThemeContext } from '../../hooks/themeContext';
 import { useAllSubjectsContext } from '../../hooks/allSubjectsContext';
+import { useUserDataContext } from '../../hooks/userDataContext';
 
 const Header = ({ loading }) => {
   const { theme } = useThemeContext();
-  const userName = 'Malvern';
+  const { userDetails } = useUserDataContext();
   const {loadingSubjects} = useAllSubjectsContext()
 
 
@@ -27,7 +28,7 @@ const Header = ({ loading }) => {
     <View style={styles.container}>
       <View style={styles.userInfo}>
         <Text style={[styles.welcomeText, { color: theme.colors.text }]}>Welcome</Text>
-        <Text style={[styles.userName, { color: theme.colors.text }]}>{userName}</Text>
+        <Text style={[styles.userName, { color: theme.colors.text }]}>{userDetails.firstName}</Text>
       </View>
       <View style={[styles.avatar, { backgroundColor: theme.colors.tetiaryBackground }]}>
         <FontAwesome name="person" size={25} color={theme.colors.secondaryText} />
