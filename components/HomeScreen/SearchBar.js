@@ -1,16 +1,20 @@
 import React, { memo, useState, useCallback, useEffect } from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity, Image, Text, FlatList, BackHandler } from 'react-native';
+import { View, TextInput, StyleSheet, TouchableOpacity, Image, Text, FlatList, BackHandler, Dimensions } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useAllSubjectsContext } from '../../hooks/allSubjectsContext';
 import { useSubjectContext } from '../../hooks/subjectDetailsConst';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useThemeContext } from '../../hooks/themeContext';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+
+
+const {width, height} = Dimensions.get('screen')
 
 const SearchBar = ({ searchBarFlex, searchBarTitle }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [searchFocused, setSearchFocused] = useState(false)
-  const { memoizedSubjects } = useAllSubjectsContext();
+  const { memoizedSubjects, loadingSubjects } = useAllSubjectsContext();
   const { setSubjectDetails, subjectDetails } = useSubjectContext();
   const navigation = useNavigation();
   const isFocused = useIsFocused();
@@ -61,19 +65,28 @@ const SearchBar = ({ searchBarFlex, searchBarTitle }) => {
     );
   });
 
+  const renderSkeleton = () => (
+    <SkeletonPlaceholder  backgroundColor={theme.colors.tetiaryBackground} highlightColor={theme.colors.primaryBackground} alignSelf='center'>
+        <SkeletonPlaceholder.Item width={'95%'} height={height * 0.058} borderRadius={20} alignSelf='center'  />  
+    </SkeletonPlaceholder>
+  );
+
   return (
     <View style={[styles.outerContainer, { flex: searchBarFlex }, { backgroundColor: theme.colors.primaryBackground }]}>
-      <View style={[styles.container, { backgroundColor: theme.colors.tetiaryBackground }]}>
-        <Ionicons name="search" size={24} color={theme.colors.secondaryText} style={styles.icon} />
-        <TextInput
-          style={[styles.input, { color: theme.colors.secondaryText }]}
-          placeholder={searchBarTitle}
-          placeholderTextColor={theme.colors.secondaryText}
-          value={searchQuery}
-          onChangeText={handleInputChange}
-          onFocus={()=>setSearchFocused(true)}
-        />
-      </View>
+      {loadingSubjects?
+        renderSkeleton():
+        <View style={[styles.container, { backgroundColor: theme.colors.tetiaryBackground }]}>
+          <Ionicons name="search" size={24} color={theme.colors.secondaryText} style={styles.icon} />
+          <TextInput
+            style={[styles.input, { color: theme.colors.secondaryText }]}
+            placeholder={searchBarTitle}
+            placeholderTextColor={theme.colors.secondaryText}
+            value={searchQuery}
+            onChangeText={handleInputChange}
+            onFocus={()=>setSearchFocused(true)}
+          />
+        </View>
+      }
       {searchQuery.length > 0 && searchResults.length > 0 ? (
         <FlatList 
           data={searchResults} 
@@ -118,7 +131,7 @@ const styles = StyleSheet.create({
     margin: 5,
     flexDirection: 'row',
     marginHorizontal: 10,
-    marginVertical: 15,
+    marginVertical: 10,
   },
   subjectImage: {
     width: 30,

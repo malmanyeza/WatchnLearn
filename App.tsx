@@ -40,7 +40,13 @@ export const HomeTabs = () => {
 
   <Tab.Navigator
           shifting={true}
-          barStyle={{ backgroundColor: colorScheme=== 'dark'?"black":'#FAFAFA' , height:70 }}
+          barStyle={{
+             marginHorizontal:-5,
+             backgroundColor: colorScheme=== 'dark'?"#02070f":'#FAFAFA' , 
+             height:70, 
+             borderWidth:2,
+             borderTopColor: colorScheme=== 'dark'?"#616161":'#E0E0E0'
+          }}
           activeColor={colorScheme=== 'dark'?"white":'gray'}
           inactiveColor='gray'
         >
@@ -111,7 +117,7 @@ export default function App() {
         <ContentProvider>
         <ThemeProvider>
           <NavigationContainer>
-            <StatusBar backgroundColor={ initialTheme==='dark'?'black':"#FAFAFA"} barStyle={contentColor} />
+            <StatusBar backgroundColor={ initialTheme==='dark'?'#02070f':"#FAFAFA"} barStyle={contentColor} />
             <Stacks/>
           </NavigationContainer>
           </ThemeProvider>

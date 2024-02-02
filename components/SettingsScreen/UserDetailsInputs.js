@@ -13,7 +13,7 @@ const UserDetailsInputs =()=>{
     const {userDetails} = useUserDataContext()
 
     return(
-        <ScrollView style={[styles.container,{backgroundColor:theme.colors.primaryBackground}]}>
+        <View style={[styles.container,{backgroundColor:theme.colors.primaryBackground}]}>
            <InputComponent
              inputType={'firstName'}
              inputValue={userDetails.firstName}
@@ -39,7 +39,7 @@ const UserDetailsInputs =()=>{
              inputValue={userDetails.password}
              inputTile={'Password'}
            />
-        </ScrollView>
+        </View>
     )
 }
 

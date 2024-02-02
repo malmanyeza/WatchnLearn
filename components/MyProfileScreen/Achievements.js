@@ -3,18 +3,20 @@ import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from "react-nati
 import Colors from "../../constants/Colors";
 import Icon from 'react-native-vector-icons/Ionicons'
 import { useThemeContext } from "../../hooks/themeContext";
+import { useNavigation } from "@react-navigation/native";
 
 const {width, height} = Dimensions.get('screen')
 
 const Achievements =()=>{
 
+const navigation = useNavigation()
 const {theme} = useThemeContext()
 
     return(
         <View style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={[styles.headerText,{color:theme.colors.text}]}>Achievements</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=>navigation.navigate('Achievements')}>
                     <Text style={styles.viewAllText}>VIEW ALL</Text>
                 </TouchableOpacity>
             </View>

@@ -43,7 +43,7 @@ const MyClassesHeader = ({title, navigateTo}) => {
             source={require('../../assets/images/icons8-flame-94.png')}
             style={styles.icon}
           />
-          <Text style={styles.iconText}>13</Text>
+          <Text style={[styles.iconText,{color:theme.colors.secondaryText}]}>13</Text>
         </View>
         <View style={styles.iconContainer}>
           <Image
@@ -57,7 +57,7 @@ const MyClassesHeader = ({title, navigateTo}) => {
             source={require('../../assets/images/icons8-heart-96.png')}
             style={styles.icon}
           />
-          <Text style={styles.iconText}>4</Text>
+          <Text style={[styles.iconText,{color:theme.colors.secondaryText}]}>4</Text>
         </View>
       </View>
     </View>
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   outerContainer:{
     borderBottomWidth:2,
     marginBottom:20,
-    paddingHorizontal:10
+    paddingHorizontal:5
   },
   container: {
     flexDirection: 'row',

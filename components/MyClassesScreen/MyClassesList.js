@@ -98,7 +98,6 @@ const MyClassesList = () => {
 
 const styles = StyleSheet.create({
   subjectContainer: {
-    padding: 10,
     marginTop: 30,
   },
   headerContainer: {
@@ -108,6 +107,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontFamily:'ComicNeue-Bold',
     marginBottom: 5,
+    marginLeft:15
   },
   syllabus: {
     backgroundColor: '#f1f1f1',
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     borderRadius: 10,
     padding: 10,
-    marginHorizontal: 5,
+    marginLeft: 10,
     minWidth: 150,
   },
   formText: {

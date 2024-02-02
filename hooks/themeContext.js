@@ -8,9 +8,9 @@ export const ThemeProvider = ({ children }) => {
     dark: true,
     colors: {
       primary: 'rgb(255, 45, 85)',
-      primaryBackground: '#000',
+      primaryBackground: '#02070f',
       secondaryBackground: '#222222',
-      tetiaryBackground: '#424242',
+      tetiaryBackground: '#616161',
       card: 'rgb(255, 255, 255)',
       text: 'white',
       secondaryText:'lightgray',

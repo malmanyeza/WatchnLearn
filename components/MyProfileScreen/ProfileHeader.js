@@ -46,7 +46,8 @@ const {theme} = useThemeContext()
 
 const styles = StyleSheet.create({
     container:{
-        padding:10
+        padding:10,
+        paddingBottom:30
     },
     header:{
         paddingTop:20,

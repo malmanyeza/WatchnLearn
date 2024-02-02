@@ -64,12 +64,13 @@ const styles = StyleSheet.create({
     },
     followButton:{
         marginTop:15,
-        backgroundColor:'lightblue',
+        backgroundColor:Colors.primary,
         borderRadius:10,
         width:'100%',
         paddingVertical:5,
         borderBottomWidth:3,
-        borderColor:Colors.primary
+        borderWidth:0.1,
+        borderColor:'#1a5b7f'
     },
     followButtonText:{
         fontSize:18,

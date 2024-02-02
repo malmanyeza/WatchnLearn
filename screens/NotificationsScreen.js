@@ -26,7 +26,7 @@ const {theme} = useThemeContext()
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'white'
+    backgroundColor:'white',
   }
   // Add more styles as needed
 });

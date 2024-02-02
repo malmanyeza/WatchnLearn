@@ -8,12 +8,12 @@ export const ContentProvider = ({ children }) => {
     [
       {
         questionText: 'What is the chemical symbol for hydrogen?',
-        image: '', // URL_TO_HYDROGEN_IMAGE
+        image: require('../assets/images/Maths.jpg'),
         answers: [
           { text: 'H', image: '', isCorrect: true }, // URL_TO_H_IMAGE
           { text: 'He', image: '', isCorrect: false }, // URL_TO_HE_IMAGE
           { text: 'O', image: '', isCorrect: false }, // URL_TO_O_IMAGE
-          { text: 'N', image: '', isCorrect: false }, // URL_TO_N_IMAGE
+          { text: 'N', image: require('../assets/images/Maths.jpg'), isCorrect: false }, // URL_TO_N_IMAGE
         ],
       },
       {
@@ -31,14 +31,14 @@ export const ContentProvider = ({ children }) => {
         image: '', // URL_TO_SUBSTANCE_CHANGE_IMAGE
         answers: [
           { text: 'Condensation', image: '', isCorrect: false }, // URL_TO_CONDENSATION_IMAGE
-          { text: 'Sublimation', image: '', isCorrect: true }, // URL_TO_SUBLIMATION_IMAGE
+          { text: 'Sublimation', image: require('../assets/images/Maths.jpg'), isCorrect: true }, // URL_TO_SUBLIMATION_IMAGE
           { text: 'Evaporation', image: '', isCorrect: false }, // URL_TO_EVAPORATION_IMAGE
           { text: 'Fusion', image: '', isCorrect: false }, // URL_TO_FUSION_IMAGE
         ],
       },
       {
         questionText: 'What is the chemical formula for water?',
-        image: '', // URL_TO_WATER_FORMULA_IMAGE
+        image: require('../assets/images/Maths.jpg'), // URL_TO_WATER_FORMULA_IMAGE
         answers: [
           { text: 'CO2', image: '', isCorrect: false }, // URL_TO_CO2_IMAGE
           { text: 'H2O', image: '', isCorrect: true }, // URL_TO_H2O_IMAGE

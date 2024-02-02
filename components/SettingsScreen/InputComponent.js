@@ -38,8 +38,8 @@ const InputComponent =({inputType, inputTile, inputValue})=>{
 
     return(
         <View style={[styles.container,{backgroundColor:theme.colors.primaryBackground}]}>
-          <Text style={[styles.inputTitleText,{color:theme.colors.tetiaryBackground}]}>{inputTile}</Text>
-           <View style={[styles.inputContainer,{borderColor:theme.colors.tetiaryBackground, flexDirection:inputType=='password'?'row':'column', justifyContent:inputType=='password'?'space-between':null}]}>
+          <Text style={[styles.inputTitleText,{color:theme.colors.secondaryText}]}>{inputTile}</Text>
+           <View style={[styles.inputContainer,{borderColor:theme.colors.tetiaryBackground, flexDirection:inputType=='password'?'row':'column', justifyContent:inputType=='password'?'space-between':null, alignItems:inputType=='password'?'center':null}]}>
                 <TextInput
                     placeholder={inputValue}
                     style={[styles.input,{color:theme.colors.text, backgroundColor:theme.colors.primaryBackground}]}
@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
         borderWidth:2,
         paddingHorizontal:5,
         marginBottom:20,
-        alignItems:'center'
     },
     input:{
         fontFamily:'ComicNeue-Regular',

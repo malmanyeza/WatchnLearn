@@ -24,7 +24,8 @@ const MyProfileHeader = ({title, navigateTo}) => {
 
     <View style={[
       styles.container,
-      {backgroundColor:theme.colors.primaryBackground}
+      {backgroundColor:theme.colors.primaryBackground},
+      {borderBottomColor:theme.colors.tetiaryBackground}
       ]}>
       <TouchableOpacity style={[
         styles.backButton
@@ -40,7 +41,7 @@ const MyProfileHeader = ({title, navigateTo}) => {
         {color:theme.colors.text}
         ]}>{title}
       </Text>
-      <TouchableOpacity onPress={logout}>
+      <TouchableOpacity onPress={()=>navigation.navigate('Settings')}>
         <Ionicons name="settings-outline" size={35} color={Colors.primary} />
       </TouchableOpacity>
     </View>
@@ -52,8 +53,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent:'space-between',
-    height: 60,
-    paddingHorizontal:20,
+    height: 70,
+    paddingHorizontal:15,
+    borderBottomWidth:2
   },
   backButton: {
     

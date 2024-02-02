@@ -73,7 +73,6 @@ const MyClassHeader = ({title, navigateTo}) => {
 const styles = StyleSheet.create({
   outerContainer:{
     borderBottomWidth:2,
-    marginBottom:20,
     paddingHorizontal:10
   },
   container: {

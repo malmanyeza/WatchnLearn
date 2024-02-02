@@ -42,11 +42,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 20,
-    marginRight:20,
+    marginLeft:15,
     marginTop: 15,
+    marginRight:10,
     marginBottom:20,
     borderBottomWidth:5,
-    borderWidth:2
+    borderWidth:2,
+    
   },
   image: {
     width: '40%',

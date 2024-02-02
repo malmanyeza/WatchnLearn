@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet , Image, ScrollView, Dimensions} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Colors from '../constants/Colors';
 import { useContentContext } from '../hooks/contentContext';
@@ -7,8 +7,9 @@ import { useNavigation } from '@react-navigation/native';
 import Header from '../components/Header';
 import { useThemeContext } from '../hooks/themeContext';
   
-
+const {width,height} = Dimensions.get('screen')
 const QuestionScreen = () => {
+  
   const {theme} = useThemeContext()
   const navigation =  useNavigation()
   const {questions, setCorrectQuestions, setTotalQuestions, setFeedback} = useContentContext()
@@ -72,11 +73,12 @@ const QuestionScreen = () => {
       ]
     }>
       <Header/>
+      <ScrollView>
       <View style={styles.questionContainer}>
         <Text style={[styles.questionText, { color: theme.colors.text }]}>{question.questionText}</Text>
 
         {/* Display question image if available */}
-        {question.image && <Image source={{ uri: question.image }} style={styles.image} />}
+        {question.image && <Image source={ question.image } style={styles.image} />}
 
         {question.answers.map((answer, answerIndex) => (
           <TouchableOpacity
@@ -87,19 +89,21 @@ const QuestionScreen = () => {
             ]}
             onPress={() => handleAnswerSelect(answerIndex)}
           >
-            {selectedAnswers[currentQuestion] === answerIndex ? (
-              <FontAwesome name={'check-circle'} color={Colors.primary} size={24} style={styles.icon} />
-            ) : (
-              <FontAwesome name={'circle-o'} color={'gray'} size={24} style={styles.icon} />
-            )}
-            <Text style={styles.answerButtonText}>{answer.text}</Text>
-
+            <View style={styles.answerTextAndCircleButton}>
+              {selectedAnswers[currentQuestion] === answerIndex ? (
+                <FontAwesome name={'check-circle'} color={Colors.primary} size={24} style={styles.icon} />
+              ) : (
+                <FontAwesome name={'circle-o'} color={'gray'} size={24} style={styles.icon} />
+              )}
+              <Text style={styles.answerButtonText}>{answer.text}</Text>
+            </View>
             {/* Display answer image if available */}
-            {answer.image && <Image source={{ uri: answer.image }} style={styles.image} />}
+            {answer.image && <Image source={ answer.image } style={[styles.image,{marginBottom:0}]} />}
 
           </TouchableOpacity>
         ))}
       </View>
+      </ScrollView>
       {currentQuestion < questions.length - 1 ? (
         <View style={styles.buttons}>
             {currentQuestion===0?null:
@@ -129,6 +133,7 @@ const QuestionScreen = () => {
             </TouchableOpacity>
         </View>
       )}
+      
     </View>
   );
 };
@@ -146,7 +151,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   answerButton: {
-    flexDirection: 'row',
     borderWidth: 1,
     borderColor: 'gray',
     padding: 10,
@@ -184,6 +188,7 @@ const styles = StyleSheet.create({
     marginHorizontal:30
   },
   buttons:{
+    position:'relative',
     flexDirection:'row',
     justifyContent:'space-between',
     marginTop:20,
@@ -197,6 +202,17 @@ const styles = StyleSheet.create({
     color:Colors.primary,
     fontSize:20,
     margin:10
+  },
+  image:{
+    width:'100%',
+    height:height*0.4,
+    resizeMode:'contain',
+    marginBottom:30,
+    borderRadius:20,
+    marginTop:10
+  },
+  answerTextAndCircleButton:{
+    flexDirection:'row'
   }
 });
 

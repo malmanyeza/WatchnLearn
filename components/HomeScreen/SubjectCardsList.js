@@ -53,10 +53,10 @@ const SubjectCardList = () => {
   
 
   const renderSkeleton = () => (
-    <SkeletonPlaceholder borderRadius={20} backgroundColor={theme.colors.tetiaryBackground} highlightColor={theme.colors.primaryBackground}>
-      <SkeletonPlaceholder.Item flexDirection="row" alignItems="center">
-        <SkeletonPlaceholder.Item width={width * 0.7} height={height * 0.3} borderRadius={20} marginLeft={20} />
-        <SkeletonPlaceholder.Item width={width * 0.7} height={height * 0.3} borderRadius={20} marginLeft={20} />
+    <SkeletonPlaceholder  backgroundColor={theme.colors.tetiaryBackground} highlightColor={theme.colors.primaryBackground} >
+      <SkeletonPlaceholder.Item flexDirection="row" alignItems="center" >
+        <SkeletonPlaceholder.Item width={width * 0.70} height={height * 0.28} borderRadius={20} marginLeft={20} />
+        <SkeletonPlaceholder.Item width={width * 0.70} height={height * 0.28} borderRadius={20} marginLeft={20} />
       </SkeletonPlaceholder.Item>
     </SkeletonPlaceholder>
   );
@@ -66,7 +66,7 @@ const SubjectCardList = () => {
   }, [filteredSubjects, scrollToTop]);
 
   return (
-    <View>
+    <View style={{paddingBottom:15}}>
       <View style={styles.header}>
         <Text style={[styles.headerText, { color: theme.colors.text }]}>Subjects</Text>
         <TouchableOpacity onPress={() => navigation.navigate('PopularClasses')}>

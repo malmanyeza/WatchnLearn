@@ -21,7 +21,8 @@ const Header = ({title, navigateTo}) => {
 
     <View style={[
       styles.container,
-      {backgroundColor:theme.colors.primaryBackground}
+      {backgroundColor:theme.colors.primaryBackground},
+      {borderBottomColor:theme.colors.tetiaryBackground}
       ]}>
       <TouchableOpacity style={[
         styles.backButton
@@ -45,11 +46,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 60,
+    height: 70,
+    borderBottomWidth:2,
   },
   backButton: {
     position: 'absolute',
-    left: 10,
+    left: 15,
     zIndex: 1,
   },
   backButtonCircle: {

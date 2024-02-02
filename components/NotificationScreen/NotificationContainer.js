@@ -20,7 +20,7 @@ const personalNotification = false
                             </View>
                             <View>
                                 <Text style={[styles.name,{color:theme.colors.text}]}>Malvern</Text>
-                                <Text style={[styles.duration,{color:theme.colors.tetiaryBackground}]}>4 days</Text>
+                                <Text style={[styles.duration,{color:theme.colors.secondaryText}]}>4 days</Text>
                             </View>
                         </View>
                         <Text style={[styles.message,{color:theme.colors.text}]}>Completed a 14 day streak!</Text>
@@ -38,7 +38,8 @@ const personalNotification = false
 
 const styles = StyleSheet.create({
     outContainer:{
-        marginHorizontal:10
+        marginHorizontal:15,
+        marginTop:25
     },
     container:{
         borderWidth:2,
