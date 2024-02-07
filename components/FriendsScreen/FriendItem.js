@@ -24,7 +24,7 @@ const FriendItem =()=>{
                     {xps}
                 </Text>
             </View>
-            <Icon name={'right-chevron'} style={[styles.chevron,{color:theme.colors.tetiaryBackground}]} />
+            <Icon name="chevron-forward" size={30} color={theme.colors.tetiaryBackground} style={styles.chevron}/>
         </View>
     )
 }

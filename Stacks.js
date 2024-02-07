@@ -34,6 +34,7 @@ const AuthStack = () => (
 
 const AppStack = () => (
   <Stack.Navigator>
+    
     <Stack.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
     <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
     <Stack.Screen name="MyProfile" component={MyProfileScreen} options={{ headerShown: false }} />
@@ -64,7 +65,7 @@ const LoadingScreen = () => {
 
 export const Stacks = () => {
 
-    const isLoggedIn = true
+    const { isLoggedIn } = useUserDataContext();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

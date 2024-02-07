@@ -3,8 +3,11 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native
 import MyClassCard from './MyClassCard';
 import { useNavigation } from '@react-navigation/native';
 import { useThemeContext } from '../../hooks/themeContext';
+import { useAllSubjectsContext } from '../../hooks/allSubjectsContext';
 
 const MyClassesList = () => {
+
+  const {myClasses, loadingClasses} = useAllSubjectsContext()
 
   const {theme} = useThemeContext()
 
@@ -18,25 +21,25 @@ const MyClassesList = () => {
     navigation.navigate('QuestionPapers')
   }
 
-  const dataset = [
-    {
-      subject: 'Mathematics',
-      forms: [
-        { form: 'Form 5', hours:134, progress: 90, term:1 },
-        { form: 'Form 6', hours:200, progress: 85, term:2 },
-        // Add more forms for Mathematics
-      ],
-    },
-    {
-      subject: 'Physics',
-      forms: [
-        { form: 'Form 5', hours: 145, progress: 75 , term:3},
-        { form: 'Form 6', hours:130, progress: 89, term:1 },
-        // Add more forms for Physics
-      ],
-    },
-    // Add more subjects as needed
-  ];
+  // const dataset = [
+  //   {
+  //     subject: 'Mathematics',
+  //     forms: [
+  //       { form: 'Form 5', hours:134, progress: 90, term:1 },
+  //       { form: 'Form 6', hours:200, progress: 85, term:2 },
+  //       // Add more forms for Mathematics
+  //     ],
+  //   },
+  //   {
+  //     subject: 'Physics',
+  //     forms: [
+  //       { form: 'Form 5', hours: 145, progress: 75 , term:3},
+  //       { form: 'Form 6', hours:130, progress: 89, term:1 },
+  //       // Add more forms for Physics
+  //     ],
+  //   },
+  //   // Add more subjects as needed
+  // ];
 
   const renderItem = ({ item }) => {
     return (
@@ -64,7 +67,7 @@ const MyClassesList = () => {
           </TouchableOpacity>
         </View>
         <FlatList
-          data={item.forms}
+          data={item.terms.sort((a, b) => a.termNumber - b.termNumber)}
           renderItem={renderForm}
           keyExtractor={(formItem, index) => index.toString()}
           horizontal
@@ -78,9 +81,9 @@ const MyClassesList = () => {
     return (
       <MyClassCard
        form={item.form}
-       totalHours={item.hours}
+       totalHours={'20'}
        subjectImage={require('../../assets/images/Chemistry.jpg')}
-       progress={item.progress}
+       progress={20}
        term={item.term}
        goToClass={()=>goToClass()}
       />
@@ -88,11 +91,26 @@ const MyClassesList = () => {
   };
 
   return (
-    <FlatList
-      data={dataset}
-      renderItem={renderItem}
-      keyExtractor={(item, index) => index.toString()}
-    />
+    <View>
+      {
+        myClasses.length>0?
+        <FlatList
+        data={myClasses}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        showsVerticalScrollIndicator={false}
+      />
+      :
+        loadingClasses?
+        <View style={{alignItems:'center',marginTop:10}}>
+          <Text style={{fontSize:20,fontFamily:'ComicNeue-Bold',color:theme.colors.text}}>Loading...</Text>
+        </View>
+      :
+      <View style={{alignItems:'center',marginTop:10}}>
+        <Text style={{fontSize:20,fontFamily:'ComicNeue-Bold',color:theme.colors.text}}>No classes yet</Text>
+      </View>
+      }
+    </View>
   );
 };
 

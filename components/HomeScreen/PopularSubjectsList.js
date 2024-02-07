@@ -37,7 +37,7 @@ const PopularSubjectsList = () => {
     const renderItem = useCallback(({ item }) => (
         <View style={styles.renderItemContainer}>
             <PopularSubject
-               subjectImage={item.subjectImage}
+               subjectImage={item.subjectImageUrl}
                subjectName={item.subjectName}
                rating={item.rating}
                enrollers={item.enrollers}

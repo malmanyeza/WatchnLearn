@@ -17,7 +17,7 @@ const {theme} = useThemeContext()
       {backgroundColor:theme.colors.tetiaryBackground}
       ]}>
       <View style={styles.leftColumn}>
-        <Image source={subjectImage} style={styles.subjectImage} />
+        <Image source={{uri:subjectImage}} style={styles.subjectImage} />
       </View>
       <View style={styles.middleColumn}>
         <Text style={[
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     width:70,
     height: 70,
     borderRadius: 10,
+    resizeMode:'contain'
   },
   subjectName: {
     marginBottom:10,
@@ -80,7 +81,8 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     marginRight: 10,
     fontFamily:'ComicNeue-Regular',
-    fontSize:16
+    fontSize:16,
+    paddingHorizontal: 10,
   },
   ratingContainer: {
     flexDirection: 'row',

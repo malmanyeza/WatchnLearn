@@ -21,6 +21,7 @@ const CoverAndHeader = ({ subjectImage, subjectName, tutorName, tutorAvatar, rat
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 20,
     paddingHorizontal:10,
     marginBottom: 20,
   },

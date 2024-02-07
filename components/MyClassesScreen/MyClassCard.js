@@ -19,7 +19,7 @@ const {theme} = useThemeContext()
       ]}>
       <Image source={subjectImage} style={styles.image} />
       <View style={styles.infoContainer}>
-        <Text style={[styles.form,{color:theme.colors.secondaryText}]}>{form}</Text>
+        <Text style={[styles.form,{color:theme.colors.secondaryText}]}>Form: {form}</Text>
         <Text style={[styles.term,{color:theme.colors.secondaryText}]}>Term: {term}</Text>
         <View style={styles.progressContainer}>
           <View style={styles.avatarContainer}>

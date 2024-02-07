@@ -95,7 +95,8 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     marginRight: 10,
     fontSize: 17,
-    fontFamily:'ComicNeue-Regular'
+    fontFamily:'ComicNeue-Regular',
+    paddingHorizontal: 10,
   },
   cardArrow: {
     height: 15,

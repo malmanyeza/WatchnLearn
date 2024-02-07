@@ -6,8 +6,11 @@ import Description from '../components/EnrollingScreen/Descriptions';
 import EnrollButton from '../components/EnrollingScreen/EnrollButton';
 import { useSubjectContext } from '../hooks/subjectDetailsConst';
 import { useThemeContext } from '../hooks/themeContext';
+import { useAllSubjectsContext } from '../hooks/allSubjectsContext';
 
 const EnrollingScreen = () => {
+
+  const {enroll} = useAllSubjectsContext()
 
   const {theme} = useThemeContext()
   const{subjectDetails} = useSubjectContext()
@@ -31,7 +34,9 @@ const EnrollingScreen = () => {
      <Description
         descriptionText={item.description}
      />
-     <EnrollButton/>
+     <EnrollButton
+       onPress={() => enroll(item.subjectId,item.name)}
+     />
     </View>
   );
 };

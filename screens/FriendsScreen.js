@@ -2,6 +2,7 @@ import React from "react";
 import {View, StyleSheet, Text} from 'react-native'
 import { useThemeContext } from "../hooks/themeContext";
 import Header from "../components/Header";
+import SwipableTopTab from "../components/FriendsScreen/SwipableTopTab";
 
 
 const FriendsScreen = () =>{
@@ -13,6 +14,7 @@ const {theme} = useThemeContext()
             <Header
                 title={'Find friends'}
             />
+            <SwipableTopTab/>
         </View>
     )
 }
