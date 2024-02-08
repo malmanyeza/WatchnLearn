@@ -4,16 +4,19 @@ import MyClassCard from './MyClassCard';
 import { useNavigation } from '@react-navigation/native';
 import { useThemeContext } from '../../hooks/themeContext';
 import { useAllSubjectsContext } from '../../hooks/allSubjectsContext';
+import { useContentContext } from '../../hooks/contentContext';
 
 const MyClassesList = () => {
 
+  const {getIntoClass} = useContentContext()
   const {myClasses, loadingClasses} = useAllSubjectsContext()
 
   const {theme} = useThemeContext()
 
   const navigation = useNavigation()
 
-  const goToClass =()=>{
+  const goToClass =(subjectId, termId)=>{
+    getIntoClass(subjectId, termId)
     navigation.navigate('MyClass')
   }
 
@@ -30,45 +33,26 @@ const MyClassesList = () => {
   //       // Add more forms for Mathematics
   //     ],
   //   },
-  //   {
-  //     subject: 'Physics',
-  //     forms: [
-  //       { form: 'Form 5', hours: 145, progress: 75 , term:3},
-  //       { form: 'Form 6', hours:130, progress: 89, term:1 },
-  //       // Add more forms for Physics
-  //     ],
-  //   },
-  //   // Add more subjects as needed
-  // ];
+  
 
   const renderItem = ({ item }) => {
+
+    const sabaId = item.subjectId
+    
     return (
       <View style={styles.subjectContainer}>
         <View style={styles.headerContainer}>
-        <Text style={[
-          styles.subjectText,
-          {color:theme.colors.text}
-          ]}>{item.subject}</Text>
+          <Text style={[styles.subjectText, {color: theme.colors.text}]}>{item.subject}</Text>
           <TouchableOpacity>
-            <Text style={[
-              styles.syllabus,
-              {backgroundColor:theme.colors.secondaryBackground},
-              {color:theme.colors.text}
-              ]}>Syllabus</Text>
+            <Text style={[styles.syllabus, {backgroundColor: theme.colors.secondaryBackground}, {color: theme.colors.text}]}>Syllabus</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={goToQuestionPapers}
-          >
-            <Text style={[
-              styles.syllabus,
-              {backgroundColor:theme.colors.secondaryBackground},
-              {color:theme.colors.text}
-              ]}>Past papers</Text>
+          <TouchableOpacity onPress={goToQuestionPapers}>
+            <Text style={[styles.syllabus, {backgroundColor: theme.colors.secondaryBackground}, {color: theme.colors.text}]}>Past papers</Text>
           </TouchableOpacity>
         </View>
         <FlatList
           data={item.terms.sort((a, b) => a.termNumber - b.termNumber)}
-          renderItem={renderForm}
+          renderItem={({ item }) => renderForm(item, sabaId)} // Pass subjectId here
           keyExtractor={(formItem, index) => index.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -76,8 +60,11 @@ const MyClassesList = () => {
       </View>
     );
   };
+  
 
-  const renderForm = ({ item }) => {
+  const renderForm = (item, subjectId) => {
+
+
     return (
       <MyClassCard
        form={item.form}
@@ -85,7 +72,7 @@ const MyClassesList = () => {
        subjectImage={require('../../assets/images/Chemistry.jpg')}
        progress={20}
        term={item.term}
-       goToClass={()=>goToClass()}
+       goToClass={()=>goToClass(subjectId, item.termId)}
       />
     );
   };

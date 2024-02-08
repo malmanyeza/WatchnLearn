@@ -1,4 +1,4 @@
-import React,{useCallback, memo} from 'react';
+import React,{useCallback, memo, useEffect} from 'react';
 import { View, SectionList, StyleSheet, Text } from 'react-native';
 import VideoOrBookContainer from './VideoOrBookContainer';
 import CircularProgressBar from './CircularProgressBar';
@@ -12,7 +12,7 @@ const ContentList = () => {
 
   const {theme} = useThemeContext()
 
-  const {contentDetails,setContentDetails, questions, setQuestions, content, week} = useContentContext();
+  const {contentDetails,setContentDetails, questions, setQuestions, content, week, classContent} = useContentContext();
 
   const navigation  = useNavigation()
 
@@ -68,18 +68,24 @@ const ContentList = () => {
       (<VideoOrBookContainer title={item.title} contentType={item.contentType} duration={item.duration} onPressHandle={() => goToVidOrPDF(item)} />)
       : null)
   );
+
+
   
 
   return (
     <View style={styles.container}>
-      <SectionList
-        sections={content}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-        renderSectionHeader={renderSectionHeader}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        ListHeaderComponent={<CircularProgressBar progress={80} />}
-      />
+      {
+        classContent?
+        <SectionList
+          sections={classContent}
+          keyExtractor={(item, index) => item + index}
+          renderItem={renderItem}
+          renderSectionHeader={renderSectionHeader}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+        />
+        :
+        <Text>Loading...</Text>
+      }
     </View>
   );
 };

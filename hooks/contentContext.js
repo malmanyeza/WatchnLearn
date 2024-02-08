@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import app from '../firebase'; // Make sure to import your firebase configuration
+
 
 const ContentContext = React.createContext();
 
@@ -161,12 +164,61 @@ export const ContentProvider = ({ children }) => {
   const [totalQuestions, setTotalQuestions] = useState(0)
   const [feedback, setFeedback] = useState(null)
   const [week, setWeek] = useState(1)
+  const [classContent, setClassContent] = useState(null)
+
+  const getIntoClass = async (subjectId, termId) => {
+   
+    try {
+      const firestore = getFirestore(app);
+  
+      // Get chapters and contents for the specified subjectId and termId
+      const chaptersRef = collection(
+        firestore,
+        `subjects/${subjectId}/terms/${termId}/chapters`
+      );
+      const chaptersSnapshot = await getDocs(chaptersRef);
+      
+      
+      const myContentData = [];
+  
+      // Loop through chapters and fetch contents for each chapter
+      for (const chapterDoc of chaptersSnapshot.docs) {
+        const chapterData = chapterDoc.data();
+        const contentsRef = collection(chapterDoc.ref, 'contents');
+        const contentsSnapshot = await getDocs(contentsRef);
+        const contentsData = contentsSnapshot.docs.map(contentDoc => {
+          const contentData = contentDoc.data();
+          return {
+            id: contentDoc.id,
+            title: contentData.topicName,
+            contentType: contentData.contentType,
+            duration: contentData.timeframe,
+            contentUrl: contentData.contentUrl,
+            week: chapterData.week,
+          };
+        });
+        
+        myContentData.push({
+          chapterTitle: chapterData.name,
+          week: chapterData.week,
+          data: contentsData,
+        });
+
+       console.log('myContentData:', myContentData);
+      }
+       
+      setClassContent(myContentData);
+    } catch (error) {
+      console.error('Error fetching class content:', error);
+      return [];
+    }
+  };
 
   return (
     <ContentContext.Provider value={{
        contentDetails, setContentDetails, questions, setQuestions,
        totalQuestions, correctQuestions, setCorrectQuestions, setTotalQuestions,
-       feedback,setFeedback, content, setContent, week, setWeek
+       feedback,setFeedback, content, setContent, week, setWeek, getIntoClass, classContent
        }}>
       {children}
     </ContentContext.Provider>

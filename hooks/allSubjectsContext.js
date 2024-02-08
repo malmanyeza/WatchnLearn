@@ -55,10 +55,10 @@ export const AllSubjectsProvider = ({ children }) => {
         if (!user) {
           return;
         }
-  
+
         const userDocRef = doc(db, 'students', user.uid);
         const myClassesCollectionRef = collection(userDocRef, 'myclasses');
-  
+
         const myClassesSnapshot = await getDocs(myClassesCollectionRef);
         // If the myclasses collection doesn't exist, return without setting myClasses
         if (myClassesSnapshot.empty) {
@@ -66,21 +66,29 @@ export const AllSubjectsProvider = ({ children }) => {
           setLoadingMyClasses(false);
           return;
         }
-  
+
         const myClassesData = myClassesSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
-  
+
         setMyClasses(myClassesData);
+        setLoadingMyClasses(false);
       } catch (error) {
         setLoadingMyClasses(false);
         console.error('Error loading myClasses:', error);
+        if (
+          error.message.includes('Could not reach Cloud Firestore backend') ||
+          error.message.includes('Failed to get documents from a collection')
+        ) {
+          // Retry loading myClasses after a short delay
+          setTimeout(loadMyClasses, 3000); // Retry after 3 seconds
+        }
       }
     };
-  
+
     loadMyClasses();
-  }, []);
+  });
   
 
   const enroll = async (subjectId, subjectName) => {
@@ -98,6 +106,7 @@ export const AllSubjectsProvider = ({ children }) => {
   
       // Construct the data structure with subject details and terms
       const myClassData = {
+        subjectId,
         subject: subjectName,
         syllabusUrl: subjectData.syllabus.document, // Assuming syllabus is stored in a map named 'syllabus'
         terms: [],
