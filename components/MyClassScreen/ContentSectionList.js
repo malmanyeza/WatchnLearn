@@ -33,10 +33,9 @@ const ContentList = () => {
     
   
   
-  const renderSectionHeader = ({ section: { title, data } }) => {
-    const sectionItemsToShow = data.filter(item => item.week === week);
+  const renderSectionHeader = ({ section: { chapterTitle, data } }) => {
     
-    if (sectionItemsToShow.length > 0) {
+    
       return (
         <View style={
           [
@@ -49,12 +48,11 @@ const ContentList = () => {
               styles.sectionHeaderText,
               {color:theme.colors.text}
             ]
-          }>{title}</Text>
+          }>{chapterTitle}</Text>
         </View>
       );
-    }
+    
   
-    return null;
   };
   
 
@@ -64,9 +62,9 @@ const ContentList = () => {
       (<QuizeContainer title={item.title} duration={item.duration} onPressHandle={() => goToQuize(item)} noOfQuestions={item.noOfQuestions} />)
       : null)
     :
-    (item.week === week ?
-      (<VideoOrBookContainer title={item.title} contentType={item.contentType} duration={item.duration} onPressHandle={() => goToVidOrPDF(item)} />)
-      : null)
+    (
+      <VideoOrBookContainer title={item.title} contentType={item.contentType} duration={item.duration} onPressHandle={() => goToVidOrPDF(item)} />
+      )
   );
 
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, createContext } from 'react';
 import { collection, getDocs, getFirestore, getDoc, setDoc, doc } from 'firebase/firestore';
 import app from '../firebase'; // Make sure to import your firebase configuration
 import { auth } from '../firebase';
-import { set } from 'react-native-reanimated';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // Create a new context
 const AllSubjectsContext = createContext();
 
@@ -50,15 +50,28 @@ export const AllSubjectsProvider = ({ children }) => {
     const loadMyClasses = async () => {
       try {
         setLoadingMyClasses(true);
+        
+        // Check if there are classes stored in AsyncStorage
+        const existingClassesJson = await AsyncStorage.getItem('myAsyncStorageClasses');
+        if (existingClassesJson) {
+          const existingClasses = JSON.parse(existingClassesJson);
+          setMyClasses(existingClasses);
+          console.log('using data from async storage')
+          setLoadingMyClasses(false);
+          return;
+        }
+        
+        // If AsyncStorage is empty, fetch classes from Firestore
         const db = getFirestore(app);
         const user = auth.currentUser;
         if (!user) {
+          setLoadingMyClasses(false);
           return;
         }
-
+  
         const userDocRef = doc(db, 'students', user.uid);
         const myClassesCollectionRef = collection(userDocRef, 'myclasses');
-
+  
         const myClassesSnapshot = await getDocs(myClassesCollectionRef);
         // If the myclasses collection doesn't exist, return without setting myClasses
         if (myClassesSnapshot.empty) {
@@ -66,12 +79,12 @@ export const AllSubjectsProvider = ({ children }) => {
           setLoadingMyClasses(false);
           return;
         }
-
+  
         const myClassesData = myClassesSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
-
+  
         setMyClasses(myClassesData);
         setLoadingMyClasses(false);
       } catch (error) {
@@ -86,9 +99,10 @@ export const AllSubjectsProvider = ({ children }) => {
         }
       }
     };
-
+  
     loadMyClasses();
-  });
+  }, []);
+  
   
 
   const enroll = async (subjectId, subjectName) => {
@@ -130,12 +144,130 @@ export const AllSubjectsProvider = ({ children }) => {
 
       // Update myClasses state
       setMyClasses(prevMyClasses => [...prevMyClasses, myClassData]);
+      await storeClassInAsyncStorage(subjectId, subjectName);
   
     } catch (error) {
       console.error('Error enrolling in subject:', error);
       alert('Error enrolling in subject:', error);
     }
   };
+
+
+  const storeClassInAsyncStorage = async (subjectId, subjectName) => {
+    try {
+      const db = getFirestore(app);
+      
+      // Fetch subject details from Firestore
+      const subjectDocRef = doc(db, 'subjects', subjectId);
+      
+      // Construct the data structure for the enrolled subject
+      const enrolledSubject = {
+        subjectId: subjectId,
+        name: subjectName,
+        terms: [],
+      };
+      
+      // Fetch terms from the subject document's 'terms' collection
+      const termsCollectionRef = collection(subjectDocRef, 'terms');
+      const termsSnapshot = await getDocs(termsCollectionRef);
+      
+      // Iterate through each term and fetch chapters and contents
+      await Promise.all(termsSnapshot.docs.map(async termDoc => {
+        const termData = termDoc.data();
+        const termId = termDoc.id;
+        const term = {
+          termId: termId,
+          term: termData.term,
+          form: termData.form,
+          progress: termData.progress,
+          syllabusUrl: termData.syllabusUrl,
+          questionpapers: [],
+          chapters: [],
+        };
+        
+        // Fetch chapters from the term document's 'chapters' collection
+        const chaptersCollectionRef = collection(termDoc.ref, 'chapters');
+        const chaptersSnapshot = await getDocs(chaptersCollectionRef);
+        
+        // Iterate through each chapter and fetch contents
+        await Promise.all(chaptersSnapshot.docs.map(async chapterDoc => {
+          const chapterData = chapterDoc.data();
+          const chapterId = chapterDoc.id;
+          const chapter = {
+            id: chapterId,
+            name: chapterData.name,
+            week: chapterData.week,
+            content: [],
+          };
+          
+          // Fetch contents from the chapter document's 'contents' collection
+          const contentsCollectionRef = collection(chapterDoc.ref, 'contents');
+          const contentsSnapshot = await getDocs(contentsCollectionRef);
+          chapter.content = contentsSnapshot.docs.map(contentDoc => {
+            const contentData = contentDoc.data();
+            return {
+              id: contentDoc.id,
+              topicName: contentData.topicName,
+              contentType: contentData.contentType,
+              contentUrl: contentData.contentUrl,
+            };
+          });
+          
+          term.chapters.push(chapter);
+        }));
+        
+        enrolledSubject.terms.push(term);
+      }));
+      
+      // Retrieve existing classes from AsyncStorage
+      const existingClassesJson = await AsyncStorage.getItem('myAsyncStorageClasses');
+      const existingClasses = existingClassesJson ? JSON.parse(existingClassesJson) : [];
+      
+      // Append the enrolled subject to existing classes
+      const updatedClasses = [...existingClasses, enrolledSubject];
+      
+      // Store the updated classes in AsyncStorage
+      await AsyncStorage.setItem('myAsyncStorageClasses', JSON.stringify(updatedClasses));
+      
+      console.log('Enrolled subject details stored in AsyncStorage:', enrolledSubject);
+    } catch (error) {
+      console.error('Error enrolling in subject and storing in AsyncStorage:', error);
+    }
+  };
+
+
+  const deleteSubjectInAsyncStorage = async (subjectId) => {
+    try {
+      // Retrieve existing classes from AsyncStorage
+      const existingClassesJson = await AsyncStorage.getItem('myAsyncStorageClasses');
+      if (!existingClassesJson) {
+        console.log('No classes found in AsyncStorage');
+        return;
+      }
+  
+      // Parse existing classes from AsyncStorage
+      const existingClasses = JSON.parse(existingClassesJson);
+  
+      // Find the index of the subject to delete
+      const index = existingClasses.findIndex((subject) => subject.subjectId === subjectId);
+  
+      // If the subject is found, remove it from the classes
+      if (index !== -1) {
+        existingClasses.splice(index, 1);
+  
+        // Update AsyncStorage with the modified classes
+        await AsyncStorage.setItem('myAsyncStorageClasses', JSON.stringify(existingClasses));
+  
+        // Update the myClasses state with the modified classes
+        setMyClasses(existingClasses);
+      } else {
+        console.log('Subject not found in AsyncStorage');
+      }
+    } catch (error) {
+      console.error('Error deleting subject from AsyncStorage:', error);
+    }
+  };
+  
   
 
   const memoizedSubjects = useMemo(() => subjects, [subjects]);
@@ -144,7 +276,7 @@ export const AllSubjectsProvider = ({ children }) => {
     <AllSubjectsContext.Provider value={{ 
       subjects: memoizedSubjects, filteredSubjects, 
       setFilteredSubjects, loadingSubjects, enroll,
-       myClasses, loadingMyClasses,  
+       myClasses, loadingMyClasses,  deleteSubjectInAsyncStorage
     }}>
       {children}
     </AllSubjectsContext.Provider>

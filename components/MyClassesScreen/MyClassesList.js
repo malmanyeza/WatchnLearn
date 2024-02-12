@@ -8,14 +8,16 @@ import { useContentContext } from '../../hooks/contentContext';
 
 const MyClassesList = () => {
 
-  const {getIntoClass} = useContentContext()
-  const {myClasses, loadingClasses} = useAllSubjectsContext()
+  const {getIntoClass, } = useContentContext()
+  const {myClasses, loadingClasses,deleteSubjectInAsyncStorage} = useAllSubjectsContext()
 
   const {theme} = useThemeContext()
 
   const navigation = useNavigation()
 
   const goToClass =(subjectId, termId)=>{
+
+ 
     getIntoClass(subjectId, termId)
     navigation.navigate('MyClass')
   }
@@ -48,6 +50,9 @@ const MyClassesList = () => {
           </TouchableOpacity>
           <TouchableOpacity onPress={goToQuestionPapers}>
             <Text style={[styles.syllabus, {backgroundColor: theme.colors.secondaryBackground}, {color: theme.colors.text}]}>Past papers</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>deleteSubjectInAsyncStorage(item.subjectId)}>
+            <Text style={[styles.syllabus, {backgroundColor: theme.colors.secondaryBackground}, {color: theme.colors.text},{marginLeft:80}]}>Unenroll</Text>
           </TouchableOpacity>
         </View>
         <FlatList

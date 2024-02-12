@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import app from '../firebase'; // Make sure to import your firebase configuration
+import { useAllSubjectsContext } from './allSubjectsContext';
 
 
 const ContentContext = React.createContext();
@@ -166,53 +167,65 @@ export const ContentProvider = ({ children }) => {
   const [week, setWeek] = useState(1)
   const [classContent, setClassContent] = useState(null)
 
-  const getIntoClass = async (subjectId, termId) => {
-   
-    try {
-      const firestore = getFirestore(app);
+ const {myClasses} = useAllSubjectsContext()
   
-      // Get chapters and contents for the specified subjectId and termId
-      const chaptersRef = collection(
-        firestore,
-        `subjects/${subjectId}/terms/${termId}/chapters`
-      );
-      const chaptersSnapshot = await getDocs(chaptersRef);
-      
-      
-      const myContentData = [];
-  
-      // Loop through chapters and fetch contents for each chapter
-      for (const chapterDoc of chaptersSnapshot.docs) {
-        const chapterData = chapterDoc.data();
-        const contentsRef = collection(chapterDoc.ref, 'contents');
-        const contentsSnapshot = await getDocs(contentsRef);
-        const contentsData = contentsSnapshot.docs.map(contentDoc => {
-          const contentData = contentDoc.data();
-          return {
-            id: contentDoc.id,
-            title: contentData.topicName,
-            contentType: contentData.contentType,
-            duration: contentData.timeframe,
-            contentUrl: contentData.contentUrl,
-            week: chapterData.week,
-          };
-        });
-        
-        myContentData.push({
-          chapterTitle: chapterData.name,
-          week: chapterData.week,
-          data: contentsData,
-        });
 
-       console.log('myContentData:', myContentData);
-      }
-       
-      setClassContent(myContentData);
+  const getIntoClass = async (subjectId, termId) => {
+    console.log(subjectId, termId);
+
+    console.log(myClasses)
+
+    try {
+        const firestore = getFirestore(app);
+        const chaptersRef = collection(
+            firestore,
+            `subjects/${subjectId}/terms/${termId}/chapters`
+        );
+        const chaptersSnapshot = await getDocs(chaptersRef);
+
+        const myContentData = [];
+
+        // Array to hold all the promises returned by getDocs calls
+        const contentPromises = [];
+
+        // Loop through chapters and fetch contents for each chapter
+        for (const chapterDoc of chaptersSnapshot.docs) {
+            const chapterData = chapterDoc.data();
+            const contentsRef = collection(chapterDoc.ref, 'contents');
+            // Push the promise returned by getDocs to the contentPromises array
+            contentPromises.push(getDocs(contentsRef).then(contentsSnapshot => {
+                const contentsData = contentsSnapshot.docs.map(contentDoc => {
+                    const contentData = contentDoc.data();
+                    return {
+                        id: contentDoc.id,
+                        title: contentData.topicName,
+                        contentType: contentData.contentType,
+                        duration: contentData.timeframe,
+                        contentUrl: contentData.contentUrl,
+                        week: chapterData.week,
+                    };
+                });
+                // Push the data to myContentData
+                myContentData.push({
+                    chapterTitle: chapterData.name,
+                    week: chapterData.week,
+                    data: contentsData,
+                });
+            }));
+        }
+
+        // Wait for all the promises to be resolved
+        await Promise.all(contentPromises);
+
+        // After all promises are resolved, set myContentData
+        setClassContent(myContentData);
     } catch (error) {
-      console.error('Error fetching class content:', error);
-      return [];
+        console.error('Error fetching class content:', error);
+        return [];
     }
-  };
+};
+
+
 
   return (
     <ContentContext.Provider value={{
