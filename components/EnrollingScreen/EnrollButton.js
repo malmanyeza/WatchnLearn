@@ -1,15 +1,27 @@
-import React,{memo} from 'react';
+import React,{memo, useEffect} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import Colors from '../../constants/Colors';
 import { useAllSubjectsContext } from '../../hooks/allSubjectsContext';
 import { useThemeContext } from '../../hooks/themeContext';
 import { BallIndicator } from 'react-native-indicators';
+import { useNavigation } from '@react-navigation/native';
 
 const {width} = Dimensions.get('window')
 
 const EnrollButton = ({onPress, isEnrolled}) => {
+
+  const navigation = useNavigation();
   const {theme} = useThemeContext()
-  const {enrollingInProcess,loadingClasses} = useAllSubjectsContext()
+  const {enrollingInProcess,loadingClasses, moveToMyClasses} = useAllSubjectsContext()
+
+
+// navigates to my classes after enrolling
+  useEffect(() => {
+    if(moveToMyClasses){
+      navigation.navigate('MyClasses')
+    }
+  }, [moveToMyClasses])
+
   return (
     <TouchableOpacity 
       style={styles.buttonContainer} 
@@ -19,7 +31,7 @@ const EnrollButton = ({onPress, isEnrolled}) => {
       {!enrollingInProcess ? (
         <View style={styles.textContainer}>
         <Text style={[styles.buttonText, { color: Colors.white }]}>{isEnrolled?'Go to class': 'Enroll'}</Text>
-        <Text style={[styles.buttonSmallText, { color: Colors.white }]}>{isEnrolled?'(already enrolled)':''}</Text>
+        {isEnrolled&&<Text style={[styles.buttonSmallText, { color: Colors.white }]}>(already enrolled)</Text>}
         </View>
       ) : (
         <BallIndicator color={theme.colors.text} size={25} />

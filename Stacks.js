@@ -17,11 +17,14 @@ import LeaderBoardScreen from './screens/LeaderBoardScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import AchievementsScreen from './screens/Achievements';
 import FriendsScreen from './screens/FriendsScreen';
+import MyClassesScreen from './screens/MyClassesScreen';
+import { MyClassesTabs } from './App';
 import { HomeTabs } from './App';
 import { useUserDataContext } from './hooks/userDataContext';
 import {BallIndicator} from 'react-native-indicators';
 import Colors from './constants/Colors';
 import { useThemeContext } from './hooks/themeContext';
+import { useAllSubjectsContext } from './hooks/allSubjectsContext';
 
 const Stack = createStackNavigator();
 
@@ -32,15 +35,20 @@ const AuthStack = () => (
   </Stack.Navigator>
 );
 
-const AppStack = () => (
-  <Stack.Navigator>
-    
+const AppStack = () => {
+
+  const { myClasses } = useAllSubjectsContext();
+  const initialRoute = !myClasses.length > 0 ? 'Home' : 'MyClasses';
+
+  return(
+  <Stack.Navigator initialRouteName={initialRoute}>
     <Stack.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
+    <Stack.Screen name="MyClasses" component={MyClassesTabs} options={{ headerShown: false }} />
+    <Stack.Screen name="MyClass" component={MyClassScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
     <Stack.Screen name="MyProfile" component={MyProfileScreen} options={{ headerShown: false }} />
     <Stack.Screen name="PopularClasses" component={PopularClassesScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Enrolling" component={EnrollingScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="MyClass" component={MyClassScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Video" component={VideoScreen} options={{ headerShown: false }} />
     <Stack.Screen name="PDF" component={PDFScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Quize" component={QuestionScreen} options={{ headerShown: false }} />
@@ -51,7 +59,8 @@ const AppStack = () => (
     <Stack.Screen name="Achievements" component={AchievementsScreen} options={{ headerShown:false }}/>
     <Stack.Screen name="Friends" component={FriendsScreen} options={{ headerShown:false }}/>
   </Stack.Navigator>
-);
+  )
+  };
 
 
 const LoadingScreen = () => {

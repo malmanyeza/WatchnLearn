@@ -1,15 +1,17 @@
-import React, {memo} from 'react';
+import React, {memo, useState} from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import MyClassCard from './MyClassCard';
 import { useNavigation } from '@react-navigation/native';
 import { useThemeContext } from '../../hooks/themeContext';
 import { useAllSubjectsContext } from '../../hooks/allSubjectsContext';
 import { useContentContext } from '../../hooks/contentContext';
+import Icon from 'react-native-vector-icons/Ionicons';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 const MyClassesList = () => {
 
   const {getIntoClass, } = useContentContext()
-  const {myClasses, loadingClasses,deleteSubjectInAsyncStorage} = useAllSubjectsContext()
+  const {myClasses, loadingClasses,unEnroll} = useAllSubjectsContext()
 
   const {theme} = useThemeContext()
 
@@ -24,6 +26,21 @@ const MyClassesList = () => {
 
   const goToQuestionPapers =()=>{
     navigation.navigate('QuestionPapers')
+  }
+
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+
+  const handleDelete = (subjectId) => {
+    unEnroll(subjectId)
+    setDeleteModalVisible(false); // Close the modal after deletion
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteModalVisible(false); // Close the modal without deleting
+  };
+
+  const openDeleteModal = () => {
+    setDeleteModalVisible(true);
   }
 
   // const dataset = [
@@ -51,8 +68,8 @@ const MyClassesList = () => {
           <TouchableOpacity onPress={goToQuestionPapers}>
             <Text style={[styles.syllabus, {backgroundColor: theme.colors.secondaryBackground}, {color: theme.colors.text}]}>Past papers</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>deleteSubjectInAsyncStorage(item.subjectId)}>
-            <Text style={[styles.syllabus, {backgroundColor: theme.colors.secondaryBackground}, {color: theme.colors.text},{marginLeft:80}]}>Unenroll</Text>
+          <TouchableOpacity onPress={openDeleteModal} style={styles.trashIcon}>
+            <Icon name="trash-outline" size={20} color={theme.colors.text} />
           </TouchableOpacity>
         </View>
         <FlatList
@@ -61,6 +78,11 @@ const MyClassesList = () => {
           keyExtractor={(formItem, index) => index.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
+        />
+        <DeleteConfirmationModal
+          isVisible={isDeleteModalVisible}
+          onDelete={()=>handleDelete(item.subjectId)}
+          onCancel={handleCancelDelete}
         />
       </View>
     );
@@ -109,9 +131,11 @@ const MyClassesList = () => {
 const styles = StyleSheet.create({
   subjectContainer: {
     marginTop: 30,
+
   },
   headerContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   subjectText: {
     fontSize: 25,
@@ -138,6 +162,10 @@ const styles = StyleSheet.create({
   },
   formText: {
     fontSize: 16,
+  },
+  trashIcon: {
+    position: 'absolute',
+    right: 10,
   },
 });
 

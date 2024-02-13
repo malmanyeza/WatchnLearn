@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useMemo, createContext } from 'react';
-import { collection, getDocs, getFirestore, getDoc, setDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, getFirestore, getDoc, setDoc, doc, deleteDoc } from 'firebase/firestore';
 import app from '../firebase'; // Make sure to import your firebase configuration
 import { auth } from '../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { set } from 'react-native-reanimated';
 // Create a new context
 const AllSubjectsContext = createContext();
 
@@ -14,6 +13,7 @@ export const AllSubjectsProvider = ({ children }) => {
   const [myClasses, setMyClasses] = useState([]);
   const [loadingMyClasses, setLoadingMyClasses] = useState(false);
   const [enrollingInProcess, setEnrollingInProcess] = useState(false);
+  const [moveToMyClasses, setMoveToMyClasses] = useState(false);
 
 
 
@@ -176,6 +176,8 @@ useEffect(() => {
       // Update myClasses state
       setMyClasses(prevMyClasses => [...prevMyClasses, myClassData]);
       await storeClassInAsyncStorage(subjectId, subjectName);
+      setMoveToMyClasses(true);
+      setMoveToMyClasses(false);
   
     } catch (error) {
       setEnrollingInProcess(false);
@@ -199,7 +201,7 @@ useEffect(() => {
       // Construct the data structure for the enrolled subject
       const enrolledSubject = {
         subjectId: subjectId,
-        name: subjectName,
+        subject: subjectName,
         terms: [],
       };
       
@@ -216,7 +218,7 @@ useEffect(() => {
           term: termData.term,
           form: termData.form,
           progress: termData.progress,
-          syllabusUrl: termData.syllabusUrl,
+          syllabusUrl: termData.syllabus.document,
           questionpapers: [],
           chapters: [],
         };
@@ -347,7 +349,7 @@ useEffect(() => {
     <AllSubjectsContext.Provider value={{ 
       subjects: memoizedSubjects, filteredSubjects, 
       setFilteredSubjects, loadingSubjects, enroll, unEnroll,
-       myClasses, loadingMyClasses,  deleteSubjectInAsyncStorage
+       myClasses, loadingMyClasses,  enrollingInProcess, moveToMyClasses
     }}>
       {children}
     </AllSubjectsContext.Provider>

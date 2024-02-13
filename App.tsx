@@ -24,7 +24,6 @@ export const HomeTabs = () => {
 
   const colorScheme = useColorScheme();
   
-  
 
   useEffect(() => {
     // Delay for 2 seconds (2000 milliseconds) before hiding the splash screen
@@ -39,6 +38,7 @@ export const HomeTabs = () => {
   return(
 
   <Tab.Navigator
+    
           shifting={true}
           barStyle={{
              marginHorizontal:-5,
@@ -89,6 +89,65 @@ export const HomeTabs = () => {
           
         </Tab.Navigator>
 )};
+
+
+
+export const MyClassesTabs = () => { 
+
+  const colorScheme = useColorScheme();
+  return(
+  <Tab.Navigator
+          initialRouteName='MyClasses'
+          shifting={true}
+          barStyle={{
+             marginHorizontal:-5,
+             backgroundColor: colorScheme=== 'dark'?"#02070f":'#FAFAFA' , 
+             height:70, 
+             borderWidth:2,
+             borderTopColor: colorScheme=== 'dark'?"#616161":'#E0E0E0'
+          }}
+          activeColor={colorScheme=== 'dark'?"white":'gray'}
+          inactiveColor='gray'
+        >
+          <Tab.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{
+              tabBarIcon: ({ focused, color }) => (
+                <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={color} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="MyClasses"
+            component={MyClassesScreen}
+            options={{
+              tabBarIcon: ({ focused, color }) => (
+                <Ionicons name={focused ? 'library' : 'library-outline'} size={24} color={color} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="MyProfile"
+            component={MyProfileScreen}
+            options={{
+              tabBarIcon: ({ focused, color }) => (
+                <Ionicons name={focused ? 'person' : 'person-outline'} size={24} color={color} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Notifications"
+            component={NotificationsScreen}
+            options={{
+              tabBarIcon: ({ focused, color }) => (
+                <Ionicons name={focused ? 'notifications' : 'notifications-outline'} size={24} color={color} />
+              ),
+            }}
+          />
+          
+        </Tab.Navigator>
+)}
 
 
 export default function App() {
