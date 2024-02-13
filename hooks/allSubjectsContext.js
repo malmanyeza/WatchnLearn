@@ -3,6 +3,7 @@ import { collection, getDocs, getFirestore, getDoc, setDoc, doc } from 'firebase
 import app from '../firebase'; // Make sure to import your firebase configuration
 import { auth } from '../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { set } from 'react-native-reanimated';
 // Create a new context
 const AllSubjectsContext = createContext();
 
@@ -12,6 +13,11 @@ export const AllSubjectsProvider = ({ children }) => {
   const [loadingSubjects, setLoadingSubjects] = useState(false)
   const [myClasses, setMyClasses] = useState([]);
   const [loadingMyClasses, setLoadingMyClasses] = useState(false);
+  const [enrollingInProcess, setEnrollingInProcess] = useState(false);
+
+
+
+  // Fetch subjects from AsyncStorage or Firestore if not found in AsyncStorage then store in state
 
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -45,6 +51,10 @@ export const AllSubjectsProvider = ({ children }) => {
     myClasses.length >0?setLoadingMyClasses(false):null 
   }, [myClasses]);
 
+
+
+
+  // Load myClasses from AsyncStorage or Firestore if not found in AsyncStorage
 
   useEffect(() => {
     const loadMyClasses = async () => {
@@ -102,11 +112,32 @@ export const AllSubjectsProvider = ({ children }) => {
   
     loadMyClasses();
   }, []);
+
+
+
+
+
+
+  // Update the isEnrolled property of filteredSubjects when myClasses changes
+
+useEffect(() => { 
+  setFilteredSubjects(prevFilteredSubjects => {
+    return prevFilteredSubjects.map(subject => {
+      const isEnrolled = myClasses.some(myClass => myClass.subjectId === subject.subjectId);
+      return { ...subject, isEnrolled };
+    });
+  });
+}, [myClasses, subjects]);  
   
-  
+
+
+
+
+  // Enroll in a subject and store the enrolled subject in Firestore and AsyncStorage
 
   const enroll = async (subjectId, subjectName) => {
     try {
+      setEnrollingInProcess(true);
       const db = getFirestore(app);
       const user = auth.currentUser;
       const userDocRef = doc(db, 'students', user.uid);
@@ -147,11 +178,16 @@ export const AllSubjectsProvider = ({ children }) => {
       await storeClassInAsyncStorage(subjectId, subjectName);
   
     } catch (error) {
+      setEnrollingInProcess(false);
       console.error('Error enrolling in subject:', error);
       alert('Error enrolling in subject:', error);
     }
   };
 
+
+
+
+// Store the enrolled subject in AsyncStorage
 
   const storeClassInAsyncStorage = async (subjectId, subjectName) => {
     try {
@@ -228,13 +264,48 @@ export const AllSubjectsProvider = ({ children }) => {
       
       // Store the updated classes in AsyncStorage
       await AsyncStorage.setItem('myAsyncStorageClasses', JSON.stringify(updatedClasses));
+      setEnrollingInProcess(false);
       
       console.log('Enrolled subject details stored in AsyncStorage:', enrolledSubject);
     } catch (error) {
+      setEnrollingInProcess(false);
       console.error('Error enrolling in subject and storing in AsyncStorage:', error);
     }
   };
 
+
+
+
+  // Unenroll from a subject and delete the unenrolled subject from Firestore and AsyncStorage
+
+  const unEnroll = async (subjectId) => {
+    try {
+      const db = getFirestore(app);
+      const user = auth.currentUser;
+      const userDocRef = doc(db, 'students', user.uid);
+      const myClassesCollectionRef = collection(userDocRef, 'myclasses');
+
+      // Delete the class from Firestore
+      await deleteDoc(doc(myClassesCollectionRef, subjectId));
+
+      // Update the myClasses state by removing the unenrolled class
+      setMyClasses(prevMyClasses =>
+        prevMyClasses.filter(subject => subject.subjectId !== subjectId)
+      );
+
+      // Delete the class from AsyncStorage
+      await deleteSubjectInAsyncStorage(subjectId);
+    } catch (error) {
+      console.error('Error unenrolling from subject:', error);
+      alert('Error unenrolling from subject:', error);
+    }
+  };
+
+
+
+
+
+  // Delete the unenrolled subject from AsyncStorage
 
   const deleteSubjectInAsyncStorage = async (subjectId) => {
     try {
@@ -275,7 +346,7 @@ export const AllSubjectsProvider = ({ children }) => {
   return (
     <AllSubjectsContext.Provider value={{ 
       subjects: memoizedSubjects, filteredSubjects, 
-      setFilteredSubjects, loadingSubjects, enroll,
+      setFilteredSubjects, loadingSubjects, enroll, unEnroll,
        myClasses, loadingMyClasses,  deleteSubjectInAsyncStorage
     }}>
       {children}

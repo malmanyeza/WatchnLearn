@@ -28,6 +28,7 @@ const SubjectCardList = () => {
     
     navigation.navigate('Enrolling');
     setSubjectDetails(item);
+    console.log(item)
     setLoading(false); // Once the execution is complete, set loading to false
   }, [navigation, setSubjectDetails]);
 

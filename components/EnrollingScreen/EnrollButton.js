@@ -7,17 +7,20 @@ import { BallIndicator } from 'react-native-indicators';
 
 const {width} = Dimensions.get('window')
 
-const EnrollButton = ({onPress}) => {
+const EnrollButton = ({onPress, isEnrolled}) => {
   const {theme} = useThemeContext()
-  const {loadingClasses} = useAllSubjectsContext()
+  const {enrollingInProcess,loadingClasses} = useAllSubjectsContext()
   return (
     <TouchableOpacity 
       style={styles.buttonContainer} 
       onPress={onPress}
       disabled={loadingClasses}
     >
-      {!loadingClasses ? (
-        <Text style={[styles.buttonText, { color: Colors.white }]}>Enroll</Text>
+      {!enrollingInProcess ? (
+        <View style={styles.textContainer}>
+        <Text style={[styles.buttonText, { color: Colors.white }]}>{isEnrolled?'Go to class': 'Enroll'}</Text>
+        <Text style={[styles.buttonSmallText, { color: Colors.white }]}>{isEnrolled?'(already enrolled)':''}</Text>
+        </View>
       ) : (
         <BallIndicator color={theme.colors.text} size={25} />
       )}
@@ -31,7 +34,7 @@ const styles = StyleSheet.create({
     bottom: 20,
     alignSelf: 'center',
     backgroundColor:Colors.primary,
-    borderRadius: 25,
+    borderRadius: 30,
     paddingVertical: 15,
     paddingHorizontal: 20,
     width:width-20,
@@ -43,6 +46,16 @@ const styles = StyleSheet.create({
     fontFamily:'ComicNeue-Bold',
     textAlign:'center'
   },
+  buttonSmallText: {
+    color: 'white',
+    fontSize: 15,
+    fontFamily:'ComicNeue-Bold',
+    textAlign:'center'
+  },
+  textContainer:{
+    justifyContent:'center',
+    alignItems:'center'
+  }
 });
 
 export default memo(EnrollButton);

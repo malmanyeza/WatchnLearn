@@ -7,11 +7,12 @@ import EnrollButton from '../components/EnrollingScreen/EnrollButton';
 import { useSubjectContext } from '../hooks/subjectDetailsConst';
 import { useThemeContext } from '../hooks/themeContext';
 import { useAllSubjectsContext } from '../hooks/allSubjectsContext';
+import { useNavigation } from '@react-navigation/native';
 
 const EnrollingScreen = () => {
 
   const {enroll} = useAllSubjectsContext()
-
+  const navigation = useNavigation();
   const {theme} = useThemeContext()
   const{subjectDetails} = useSubjectContext()
   const item = subjectDetails;
@@ -35,7 +36,8 @@ const EnrollingScreen = () => {
         descriptionText={item.description}
      />
      <EnrollButton
-       onPress={() => enroll(item.subjectId,item.name)}
+       onPress={() => item.isEnrolled?navigation.navigate('MyClasses'):enroll(item.subjectId,item.name)}
+       isEnrolled={item.isEnrolled}
      />
     </View>
   );

@@ -170,60 +170,74 @@ export const ContentProvider = ({ children }) => {
  const {myClasses} = useAllSubjectsContext()
   
 
-  const getIntoClass = async (subjectId, termId) => {
-    console.log(subjectId, termId);
+ const getIntoClass = async (subjectId, termId) => {
+  try {
+      let myContentData = [];
+      
+      // Check if myClasses contains the subject and term data
+      const subjectTerm = myClasses.find(subject => subject.id === subjectId)?.terms.find(term => term.id === termId);
+      
+      if (subjectTerm) {
+          // If the subject and term data is available in myClasses, use it
+          myContentData = subjectTerm.classContent;
+          setClassContent(myContentData);
+      } else {
+          // If the subject and term data is not available, fetch it from Firebase
+          const firestore = getFirestore(app);
+          const chaptersRef = collection(
+              firestore,
+              `subjects/${subjectId}/terms/${termId}/chapters`
+          );
+          const chaptersSnapshot = await getDocs(chaptersRef);
 
-    console.log(myClasses)
+          // Loop through chapters and fetch contents for each chapter
+          for (const chapterDoc of chaptersSnapshot.docs) {
+              const chapterData = chapterDoc.data();
+              const contentsRef = collection(chapterDoc.ref, 'contents');
+              const contentsSnapshot = await getDocs(contentsRef);
+              const contentsData = contentsSnapshot.docs.map(contentDoc => {
+                  const contentData = contentDoc.data();
+                  return {
+                      id: contentDoc.id,
+                      title: contentData.topicName,
+                      contentType: contentData.contentType,
+                      duration: contentData.timeframe,
+                      contentUrl: contentData.contentUrl,
+                      week: chapterData.week,
+                  };
+              });
 
-    try {
-        const firestore = getFirestore(app);
-        const chaptersRef = collection(
-            firestore,
-            `subjects/${subjectId}/terms/${termId}/chapters`
-        );
-        const chaptersSnapshot = await getDocs(chaptersRef);
+              myContentData.push({
+                  chapterTitle: chapterData.name,
+                  week: chapterData.week,
+                  data: contentsData,
+              });
+          }
 
-        const myContentData = [];
-
-        // Array to hold all the promises returned by getDocs calls
-        const contentPromises = [];
-
-        // Loop through chapters and fetch contents for each chapter
-        for (const chapterDoc of chaptersSnapshot.docs) {
-            const chapterData = chapterDoc.data();
-            const contentsRef = collection(chapterDoc.ref, 'contents');
-            // Push the promise returned by getDocs to the contentPromises array
-            contentPromises.push(getDocs(contentsRef).then(contentsSnapshot => {
-                const contentsData = contentsSnapshot.docs.map(contentDoc => {
-                    const contentData = contentDoc.data();
-                    return {
-                        id: contentDoc.id,
-                        title: contentData.topicName,
-                        contentType: contentData.contentType,
-                        duration: contentData.timeframe,
-                        contentUrl: contentData.contentUrl,
-                        week: chapterData.week,
-                    };
-                });
-                // Push the data to myContentData
-                myContentData.push({
-                    chapterTitle: chapterData.name,
-                    week: chapterData.week,
-                    data: contentsData,
-                });
-            }));
-        }
-
-        // Wait for all the promises to be resolved
-        await Promise.all(contentPromises);
-
-        // After all promises are resolved, set myContentData
-        setClassContent(myContentData);
-    } catch (error) {
-        console.error('Error fetching class content:', error);
-        return [];
-    }
+          // Set myContentData and update myClasses with the fetched data
+          setClassContent(myContentData);
+          // Update myClasses with the fetched class content
+          const updatedMyClasses = myClasses.map(subject => {
+              if (subject.id === subjectId) {
+                  const updatedTerms = subject.terms.map(term => {
+                      if (term.id === termId) {
+                          return { ...term, classContent: myContentData };
+                      }
+                      return term;
+                  });
+                  return { ...subject, terms: updatedTerms };
+              }
+              return subject;
+          });
+          // Update myClasses in AsyncStorage
+          AsyncStorage.setItem('myClasses', JSON.stringify(updatedMyClasses));
+      }
+  } catch (error) {
+      console.error('Error fetching class content:', error);
+      return [];
+  }
 };
+
 
 
 
