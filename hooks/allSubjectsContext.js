@@ -175,9 +175,7 @@ useEffect(() => {
 
       // Update myClasses state
       setMyClasses(prevMyClasses => [...prevMyClasses, myClassData]);
-      await storeClassInAsyncStorage(subjectId, subjectName);
-      setMoveToMyClasses(true);
-      setMoveToMyClasses(false);
+      await storeClassInAsyncStorage(subjectId, subjectName, myClassData);
   
     } catch (error) {
       setEnrollingInProcess(false);
@@ -191,19 +189,12 @@ useEffect(() => {
 
 // Store the enrolled subject in AsyncStorage
 
-  const storeClassInAsyncStorage = async (subjectId, subjectName) => {
+  const storeClassInAsyncStorage = async (subjectId, subjectName, myClassData) => {
     try {
       const db = getFirestore(app);
       
       // Fetch subject details from Firestore
       const subjectDocRef = doc(db, 'subjects', subjectId);
-      
-      // Construct the data structure for the enrolled subject
-      const enrolledSubject = {
-        subjectId: subjectId,
-        subject: subjectName,
-        terms: [],
-      };
       
       // Fetch terms from the subject document's 'terms' collection
       const termsCollectionRef = collection(subjectDocRef, 'terms');
@@ -215,11 +206,9 @@ useEffect(() => {
         const termId = termDoc.id;
         const term = {
           termId: termId,
+          termNumber: termData.termNumber,
           term: termData.term,
           form: termData.form,
-          progress: termData.progress,
-          syllabusUrl: termData.syllabus.document,
-          questionpapers: [],
           chapters: [],
         };
         
@@ -254,7 +243,7 @@ useEffect(() => {
           term.chapters.push(chapter);
         }));
         
-        enrolledSubject.terms.push(term);
+        myClassData.terms.push(term);
       }));
       
       // Retrieve existing classes from AsyncStorage
@@ -262,13 +251,15 @@ useEffect(() => {
       const existingClasses = existingClassesJson ? JSON.parse(existingClassesJson) : [];
       
       // Append the enrolled subject to existing classes
-      const updatedClasses = [...existingClasses, enrolledSubject];
+      const updatedClasses = [...existingClasses, myClassData];
       
       // Store the updated classes in AsyncStorage
       await AsyncStorage.setItem('myAsyncStorageClasses', JSON.stringify(updatedClasses));
       setEnrollingInProcess(false);
+      setMoveToMyClasses(true);
+      setMoveToMyClasses(false);
       
-      console.log('Enrolled subject details stored in AsyncStorage:', enrolledSubject);
+      console.log('Enrolled subject details stored in AsyncStorage:', myClassData);
     } catch (error) {
       setEnrollingInProcess(false);
       console.error('Error enrolling in subject and storing in AsyncStorage:', error);

@@ -18,13 +18,11 @@ import SettingsScreen from './screens/SettingsScreen';
 import AchievementsScreen from './screens/Achievements';
 import FriendsScreen from './screens/FriendsScreen';
 import MyClassesScreen from './screens/MyClassesScreen';
-import { MyClassesTabs } from './App';
-import { HomeTabs } from './App';
 import { useUserDataContext } from './hooks/userDataContext';
 import {BallIndicator} from 'react-native-indicators';
 import Colors from './constants/Colors';
 import { useThemeContext } from './hooks/themeContext';
-import { useAllSubjectsContext } from './hooks/allSubjectsContext';
+import { Tabs } from './Tabs';
 
 const Stack = createStackNavigator();
 
@@ -37,13 +35,10 @@ const AuthStack = () => (
 
 const AppStack = () => {
 
-  const { myClasses } = useAllSubjectsContext();
-  const initialRoute = !myClasses.length > 0 ? 'Home' : 'MyClasses';
-
   return(
-  <Stack.Navigator initialRouteName={initialRoute}>
-    <Stack.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
-    <Stack.Screen name="MyClasses" component={MyClassesTabs} options={{ headerShown: false }} />
+  <Stack.Navigator >
+    <Stack.Screen name="Home" component={Tabs} options={{ headerShown: false }} />
+    <Stack.Screen name="MyClasses" component={MyClassesScreen} options={{ headerShown: false }} />
     <Stack.Screen name="MyClass" component={MyClassScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
     <Stack.Screen name="MyProfile" component={MyProfileScreen} options={{ headerShown: false }} />
@@ -92,3 +87,4 @@ export const Stacks = () => {
 
     return isLoggedIn ? <AppStack /> : <AuthStack />;
 };
+

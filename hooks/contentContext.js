@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import app from '../firebase'; // Make sure to import your firebase configuration
 import { useAllSubjectsContext } from './allSubjectsContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const ContentContext = React.createContext();

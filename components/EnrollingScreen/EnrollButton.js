@@ -18,7 +18,7 @@ const EnrollButton = ({onPress, isEnrolled}) => {
 // navigates to my classes after enrolling
   useEffect(() => {
     if(moveToMyClasses){
-      navigation.navigate('MyClasses')
+      navigation.navigate('Home',{screen:'MyClasses'})
     }
   }, [moveToMyClasses])
 

@@ -6,14 +6,20 @@ import HomeScreen from './screens/HomeScreen';
 import MyClassesScreen from './screens/MyClassesScreen';
 import MyProfileScreen from './screens/MyProfileScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
+import { useAllSubjectsContext } from './hooks/allSubjectsContext';
+
 
 const Tab = createMaterialBottomTabNavigator();
 
-const Tabs = () => {
+export const Tabs = () => {
   const colorScheme = useColorScheme();
+
+  const { myClasses } = useAllSubjectsContext();
+  const initialRoute = !myClasses.length > 0 ? 'Home' : 'MyClasses';
 
   return (
     <Tab.Navigator
+      initialRouteName={initialRoute}
       shifting={true}
       barStyle={{
         marginHorizontal: -5,
@@ -65,4 +71,4 @@ const Tabs = () => {
   );
 };
 
-export default Tabs;
+
