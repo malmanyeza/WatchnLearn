@@ -130,6 +130,7 @@ dependencies {
     }
 
     implementation project(':react-native-splash-screen')
+    implementation project(':react-native-fs')
 
 }
 

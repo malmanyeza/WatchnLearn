@@ -36,7 +36,7 @@ const EnrollingScreen = () => {
         descriptionText={item.description}
      />
      <EnrollButton
-       onPress={() => item.isEnrolled?navigation.navigate('MyClasses'):enroll(item.subjectId,item.name)}
+       onPress={() => item.isEnrolled?navigation.navigate('MyClasses'):enroll(item.subjectId,item.name,item.subjectImageUrl)}
        isEnrolled={item.isEnrolled}
      />
     </View>

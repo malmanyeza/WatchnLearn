@@ -9,12 +9,12 @@ const UserDataContext = React.createContext();
 
 export const UserDataProvider = ({ children }) => {
   const [userDetails, setUserDetails] = useState({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    school: '',
-    password: '',
+    firstName: ' ',
+    lastName: ' ',
+    phone: ' ',
+    email: ' ',
+    school: ' ',
+    password: ' ',
   });
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);

@@ -3,6 +3,8 @@ import { collection, getDocs, getFirestore, getDoc, setDoc, doc, deleteDoc } fro
 import app from '../firebase'; // Make sure to import your firebase configuration
 import { auth } from '../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNFetchBlob from 'rn-fetch-blob';
+
 // Create a new context
 const AllSubjectsContext = createContext();
 
@@ -135,14 +137,17 @@ useEffect(() => {
 
   // Enroll in a subject and store the enrolled subject in Firestore and AsyncStorage
 
-  const enroll = async (subjectId, subjectName) => {
+  const enroll = async (subjectId, subjectName, subjectImageUrl) => {
     try {
       setEnrollingInProcess(true);
       const db = getFirestore(app);
       const user = auth.currentUser;
       const userDocRef = doc(db, 'students', user.uid);
       const myClassesCollectionRef = collection(userDocRef, 'myclasses');
-      
+
+      // Download and save the subject image to the file system
+      const imagePath = await downloadAndSaveImage(subjectImageUrl, subjectName);
+
   
       // Fetch subject details from the 'subjects' collection
       const subjectDocRef = doc(db, 'subjects', subjectId);
@@ -175,7 +180,7 @@ useEffect(() => {
 
       // Update myClasses state
       setMyClasses(prevMyClasses => [...prevMyClasses, myClassData]);
-      await storeClassInAsyncStorage(subjectId, subjectName, myClassData);
+      await storeClassInAsyncStorage(subjectId, subjectName, myClassData, imagePath);
   
     } catch (error) {
       setEnrollingInProcess(false);
@@ -189,7 +194,7 @@ useEffect(() => {
 
 // Store the enrolled subject in AsyncStorage
 
-  const storeClassInAsyncStorage = async (subjectId, subjectName, myClassData) => {
+  const storeClassInAsyncStorage = async (subjectId, subjectName, myClassData, imagePath) => {
     try {
       const db = getFirestore(app);
       
@@ -251,7 +256,7 @@ useEffect(() => {
       const existingClasses = existingClassesJson ? JSON.parse(existingClassesJson) : [];
       
       // Append the enrolled subject to existing classes
-      const updatedClasses = [...existingClasses, myClassData];
+      const updatedClasses = [...existingClasses, {imagePath, ...myClassData}]
       
       // Store the updated classes in AsyncStorage
       await AsyncStorage.setItem('myAsyncStorageClasses', JSON.stringify(updatedClasses));
@@ -266,6 +271,24 @@ useEffect(() => {
     }
   };
 
+  const downloadAndSaveImage = async (imageUrl, subjectName) => {
+    try {
+      const imageName = `${subjectName}.jpg`; // Construct image name from subject name
+      const imagePath = `${RNFetchBlob.fs.dirs.DocumentDir}/${imageName}`;
+      
+      const res = await RNFetchBlob.config({
+        fileCache: true,
+        appendExt: 'jpg',
+        path: imagePath
+      }).fetch('GET', imageUrl);
+      
+      console.log('Image downloaded to:', imagePath);
+      return imagePath;
+    } catch (error) {
+      console.error('Error downloading and saving image:', error);
+      throw error;
+    }
+  };
 
 
 
