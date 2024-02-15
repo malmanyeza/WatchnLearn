@@ -250,21 +250,24 @@ useEffect(() => {
         
         myClassData.terms.push(term);
       }));
+
+      //Add imagePath property to myClassData
+      myClassData.imagePath = imagePath;
       
       // Retrieve existing classes from AsyncStorage
       const existingClassesJson = await AsyncStorage.getItem('myAsyncStorageClasses');
       const existingClasses = existingClassesJson ? JSON.parse(existingClassesJson) : [];
       
       // Append the enrolled subject to existing classes
-      const updatedClasses = [...existingClasses, {imagePath, ...myClassData}]
-      
+      const updatedClasses = [...existingClasses, myClassData];
+      console.log('subject image',myClassData.imagePath)
       // Store the updated classes in AsyncStorage
       await AsyncStorage.setItem('myAsyncStorageClasses', JSON.stringify(updatedClasses));
       setEnrollingInProcess(false);
       setMoveToMyClasses(true);
       setMoveToMyClasses(false);
       
-      console.log('Enrolled subject details stored in AsyncStorage:', myClassData);
+      console.log('subject image',imagePath)
     } catch (error) {
       setEnrollingInProcess(false);
       console.error('Error enrolling in subject and storing in AsyncStorage:', error);

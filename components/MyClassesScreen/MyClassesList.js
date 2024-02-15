@@ -1,4 +1,4 @@
-import React, {memo, useState} from 'react';
+import React, {memo, useState, useEffect} from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import MyClassCard from './MyClassCard';
 import { useNavigation } from '@react-navigation/native';
@@ -57,6 +57,7 @@ const MyClassesList = () => {
   const renderItem = ({ item }) => {
 
     const sabaId = item.subjectId
+    const subImage = item.imagePath
     
     return (
       <View style={styles.subjectContainer}>
@@ -74,7 +75,7 @@ const MyClassesList = () => {
         </View>
         <FlatList
           data={item.terms.sort((a, b) => a.termNumber - b.termNumber)}
-          renderItem={({ item }) => renderForm(item, sabaId)} // Pass subjectId here
+          renderItem={({ item }) => renderForm(item, sabaId,subImage)} // Pass subjectId here
           keyExtractor={(formItem, index) => index.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -89,14 +90,14 @@ const MyClassesList = () => {
   };
   
 
-  const renderForm = (item, subjectId) => {
+  const renderForm = (item, subjectId, subImage) => {
 
 
     return (
       <MyClassCard
        form={item.form}
        totalHours={'20'}
-       subjectImage={require('../../assets/images/Chemistry.jpg')}
+       subjectImage={subImage}
        progress={20}
        term={item.term}
        goToClass={()=>goToClass(subjectId, item.termId)}

@@ -17,7 +17,7 @@ const {theme} = useThemeContext()
       styles.container,
       {borderColor:theme.colors.tetiaryBackground}
       ]}>
-      <Image source={subjectImage} style={styles.image} />
+      <Image source={{ uri: `file://${subjectImage}` }} style={styles.image} />
       <View style={styles.infoContainer}>
         <Text style={[styles.form,{color:theme.colors.secondaryText}]}>Form: {form}</Text>
         <Text style={[styles.term,{color:theme.colors.secondaryText}]}>Term: {term}</Text>
