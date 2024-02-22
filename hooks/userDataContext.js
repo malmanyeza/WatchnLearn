@@ -9,18 +9,22 @@ const UserDataContext = React.createContext();
 
 export const UserDataProvider = ({ children }) => {
   const [userDetails, setUserDetails] = useState({
-    firstName: ' ',
-    lastName: ' ',
-    phone: ' ',
-    email: ' ',
-    school: ' ',
-    password: ' ',
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    school: '',
+    password: '',
   });
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loadingUser, setLoadingUser] = useState(false);
 
+
+
+//Load user information
   useEffect(() => {
+    setLoadingUser(true)
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
       setUser(authUser);
       setIsLoggedIn(!!authUser);
@@ -31,6 +35,7 @@ export const UserDataProvider = ({ children }) => {
           const userData = await AsyncStorage.getItem('userData');
           if (userData) {
             setUserDetails(JSON.parse(userData));
+            setLoadingUser(false)
           } else {
             // If userData is not in AsyncStorage, fetch it from Firestore and store in AsyncStorage
             try {
@@ -41,12 +46,16 @@ export const UserDataProvider = ({ children }) => {
                 setUserDetails(userDoc);
                 await AsyncStorage.setItem('userData', JSON.stringify(userDoc));
               }
+              setLoadingUser(false)
+              setIsLoggedIn(true)
             } catch (firestoreError) {
+              setLoadingUser(false)
               // Handle Firestore error
               console.error('Error fetching user data from Firestore:', firestoreError.message);
             }
           }
         } catch (asyncStorageError) {
+          setLoadingUser(false)
           // Handle AsyncStorage error
           console.error('Error fetching user data from AsyncStorage:', asyncStorageError.message);
         }

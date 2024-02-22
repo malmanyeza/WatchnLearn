@@ -68,23 +68,24 @@ const LoadingScreen = () => {
 }
 
 export const Stacks = () => {
+  const { isLoggedIn, loadingUser } = useUserDataContext();
+  const [loading, setLoading] = useState(true);
 
-    const { isLoggedIn } = useUserDataContext();
-    const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    // Simulate some delay
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+    }, 4000);
 
-    useEffect(() => {
-        // Simulate some delay
-        const timeoutId = setTimeout(() => {
-        setLoading(false);
-        }, 4000);
+    return () => clearTimeout(timeoutId);
+  }, []);
 
-        return () => clearTimeout(timeoutId);
-    }, []);
+  if (loadingUser&&!isLoggedIn) {
+    return <LoadingScreen />;
+  }
 
-    if (loading) {
-        return <LoadingScreen />;
-    }
-
-    return isLoggedIn ? <AppStack /> : <AuthStack />;
+  return isLoggedIn ? <AppStack /> : <AuthStack />;
 };
+
+
 

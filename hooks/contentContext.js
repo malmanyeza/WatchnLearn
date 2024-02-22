@@ -182,6 +182,7 @@ export const ContentProvider = ({ children }) => {
           // If the subject and term data is available in myClasses, use it
           myContentData = subjectTerm.classContent;
           setClassContent(myContentData);
+          console.log('Here is my term data:', myContentData)
       } else {
           // If the subject and term data is not available, fetch it from Firebase
           const firestore = getFirestore(app);

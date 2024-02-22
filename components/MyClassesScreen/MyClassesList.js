@@ -11,17 +11,24 @@ import DeleteConfirmationModal from './DeleteConfirmationModal';
 const MyClassesList = () => {
 
   const {getIntoClass, } = useContentContext()
-  const {myClasses, loadingClasses,unEnroll} = useAllSubjectsContext()
+  const {myClasses, loadingClasses,unEnroll, setMyCurrentChapters, myCurrentChapters} = useAllSubjectsContext()
 
   const {theme} = useThemeContext()
 
   const navigation = useNavigation()
 
-  const goToClass =(subjectId, termId)=>{
+  useEffect(()=>{
+    if(myCurrentChapters.length>0){
+      console.log('Here is my current chapters:',myCurrentChapters)
+      navigation.navigate('MyClass')
+    }
+  }
+  ,[myCurrentChapters])
 
+  const goToClass =(item)=>{
  
-    getIntoClass(subjectId, termId)
-    navigation.navigate('MyClass')
+   
+    setMyCurrentChapters(item.chapters)
   }
 
   const goToQuestionPapers =()=>{
@@ -100,7 +107,7 @@ const MyClassesList = () => {
        subjectImage={subImage}
        progress={20}
        term={item.term}
-       goToClass={()=>goToClass(subjectId, item.termId)}
+       goToClass={()=>goToClass(item)}
       />
     );
   };

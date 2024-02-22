@@ -6,11 +6,18 @@ import { useNavigation } from '@react-navigation/native';
 import { useContentContext } from '../../hooks/contentContext';
 import QuizeContainer from './QuizeContainer';
 import { useThemeContext } from '../../hooks/themeContext';
-
+import { useAllSubjectsContext } from '../../hooks/allSubjectsContext';
 
 const ContentList = () => {
 
   const {theme} = useThemeContext()
+
+  const {myCurrentChapters} = useAllSubjectsContext()
+
+  useEffect(()=>{
+    console.log('Here are my current chapters in MyClass Screen',myCurrentChapters)
+    console.log('Here is the old content structure:',content)
+  },[myCurrentChapters])
 
   const {contentDetails,setContentDetails, questions, setQuestions, content, week, classContent} = useContentContext();
 
@@ -73,9 +80,9 @@ const ContentList = () => {
   return (
     <View style={styles.container}>
       {
-        classContent?
+        content?
         <SectionList
-          sections={classContent}
+          sections={content}
           keyExtractor={(item, index) => item + index}
           renderItem={renderItem}
           renderSectionHeader={renderSectionHeader}

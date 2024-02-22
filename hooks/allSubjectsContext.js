@@ -16,6 +16,7 @@ export const AllSubjectsProvider = ({ children }) => {
   const [loadingMyClasses, setLoadingMyClasses] = useState(false);
   const [enrollingInProcess, setEnrollingInProcess] = useState(false);
   const [moveToMyClasses, setMoveToMyClasses] = useState(false);
+  const [myCurrentChapters, setMyCurrentChapters] = useState([]);
 
 
 
@@ -67,7 +68,9 @@ export const AllSubjectsProvider = ({ children }) => {
         const existingClassesJson = await AsyncStorage.getItem('myAsyncStorageClasses');
         if (existingClassesJson) {
           const existingClasses = JSON.parse(existingClassesJson);
+          console.log('existingClasses', existingClasses)
           setMyClasses(existingClasses);
+
           console.log('using data from async storage')
           setLoadingMyClasses(false);
           return;
@@ -180,6 +183,7 @@ useEffect(() => {
 
       // Update myClasses state
       setMyClasses(prevMyClasses => [...prevMyClasses, myClassData]);
+      myClassData.terms = []
       await storeClassInAsyncStorage(subjectId, subjectName, myClassData, imagePath);
   
     } catch (error) {
@@ -194,85 +198,87 @@ useEffect(() => {
 
 // Store the enrolled subject in AsyncStorage
 
-  const storeClassInAsyncStorage = async (subjectId, subjectName, myClassData, imagePath) => {
-    try {
-      const db = getFirestore(app);
+const storeClassInAsyncStorage = async (subjectId, subjectName, myClassData, imagePath) => {
+  try {
+    const db = getFirestore(app);
+    
+    // Fetch subject details from Firestore
+    const subjectDocRef = doc(db, 'subjects', subjectId);
+    
+    // Fetch terms from the subject document's 'terms' collection
+    const termsCollectionRef = collection(subjectDocRef, 'terms');
+    const termsSnapshot = await getDocs(termsCollectionRef);
+    
+    // Iterate through each term and fetch chapters and contents
+    await Promise.all(termsSnapshot.docs.map(async termDoc => {
+      const termData = termDoc.data();
+      const termId = termDoc.id;
+      const term = {
+        termId: termId,
+        termNumber: termData.termNumber,
+        term: termData.term,
+        form: termData.form,
+        chapters: [],
+      };
       
-      // Fetch subject details from Firestore
-      const subjectDocRef = doc(db, 'subjects', subjectId);
+      // Fetch chapters from the term document's 'chapters' collection
+      const chaptersCollectionRef = collection(termDoc.ref, 'chapters');
+      const chaptersSnapshot = await getDocs(chaptersCollectionRef);
       
-      // Fetch terms from the subject document's 'terms' collection
-      const termsCollectionRef = collection(subjectDocRef, 'terms');
-      const termsSnapshot = await getDocs(termsCollectionRef);
-      
-      // Iterate through each term and fetch chapters and contents
-      await Promise.all(termsSnapshot.docs.map(async termDoc => {
-        const termData = termDoc.data();
-        const termId = termDoc.id;
-        const term = {
-          termId: termId,
-          termNumber: termData.termNumber,
-          term: termData.term,
-          form: termData.form,
-          chapters: [],
+      // Iterate through each chapter and fetch contents
+      await Promise.all(chaptersSnapshot.docs.map(async chapterDoc => {
+        const chapterData = chapterDoc.data();
+        const chapterId = chapterDoc.id;
+        const chapter = {
+          id: chapterId,
+          name: chapterData.name,
+          week: chapterData.week,
+          content: [],
         };
         
-        // Fetch chapters from the term document's 'chapters' collection
-        const chaptersCollectionRef = collection(termDoc.ref, 'chapters');
-        const chaptersSnapshot = await getDocs(chaptersCollectionRef);
-        
-        // Iterate through each chapter and fetch contents
-        await Promise.all(chaptersSnapshot.docs.map(async chapterDoc => {
-          const chapterData = chapterDoc.data();
-          const chapterId = chapterDoc.id;
-          const chapter = {
-            id: chapterId,
-            name: chapterData.name,
-            week: chapterData.week,
-            content: [],
+        // Fetch contents from the chapter document's 'contents' collection
+        const contentsCollectionRef = collection(chapterDoc.ref, 'contents');
+        const contentsSnapshot = await getDocs(contentsCollectionRef);
+        chapter.content = contentsSnapshot.docs.map(contentDoc => {
+          const contentData = contentDoc.data();
+          return {
+            id: contentDoc.id,
+            topicName: contentData.topicName,
+            contentType: contentData.contentType,
+            contentUrl: contentData.contentUrl,
           };
-          
-          // Fetch contents from the chapter document's 'contents' collection
-          const contentsCollectionRef = collection(chapterDoc.ref, 'contents');
-          const contentsSnapshot = await getDocs(contentsCollectionRef);
-          chapter.content = contentsSnapshot.docs.map(contentDoc => {
-            const contentData = contentDoc.data();
-            return {
-              id: contentDoc.id,
-              topicName: contentData.topicName,
-              contentType: contentData.contentType,
-              contentUrl: contentData.contentUrl,
-            };
-          });
-          
-          term.chapters.push(chapter);
-        }));
+        });
         
-        myClassData.terms.push(term);
+        term.chapters.push(chapter);
       }));
+      
+      // Add the term to myClassData
+      myClassData.terms.push({...term}); // Ensure each term is a separate object
+    }));
 
-      //Add imagePath property to myClassData
-      myClassData.imagePath = imagePath;
-      
-      // Retrieve existing classes from AsyncStorage
-      const existingClassesJson = await AsyncStorage.getItem('myAsyncStorageClasses');
-      const existingClasses = existingClassesJson ? JSON.parse(existingClassesJson) : [];
-      
-      // Append the enrolled subject to existing classes
-      const updatedClasses = [...existingClasses, myClassData];
-      console.log('subject image',myClassData.imagePath)
-      // Store the updated classes in AsyncStorage
-      await AsyncStorage.setItem('myAsyncStorageClasses', JSON.stringify(updatedClasses));
-      setEnrollingInProcess(false);
-      setMoveToMyClasses(true);
-      setMoveToMyClasses(false);
-      
-      console.log('subject image',imagePath)
-    } catch (error) {
-      setEnrollingInProcess(false);
-      console.error('Error enrolling in subject and storing in AsyncStorage:', error);
-    }
-  };
+    // Add imagePath property to myClassData
+    myClassData.imagePath = imagePath;
+    
+    // Retrieve existing classes from AsyncStorage
+    const existingClassesJson = await AsyncStorage.getItem('myAsyncStorageClasses');
+    const existingClasses = existingClassesJson ? JSON.parse(existingClassesJson) : [];
+    
+    // Append the enrolled subject to existing classes
+    const updatedClasses = [...existingClasses, myClassData];
+    
+    // Store the updated classes in AsyncStorage
+    await AsyncStorage.setItem('myAsyncStorageClasses', JSON.stringify(updatedClasses));
+    setEnrollingInProcess(false);
+    setMoveToMyClasses(true);
+    setMoveToMyClasses(false);
+    
+    console.log('subject image', myClassData.imagePath)
+  } catch (error) {
+    setEnrollingInProcess(false);
+    console.error('Error enrolling in subject and storing in AsyncStorage:', error);
+  }
+};
+
 
   const downloadAndSaveImage = async (imageUrl, subjectName) => {
     try {
@@ -366,7 +372,8 @@ useEffect(() => {
     <AllSubjectsContext.Provider value={{ 
       subjects: memoizedSubjects, filteredSubjects, 
       setFilteredSubjects, loadingSubjects, enroll, unEnroll,
-       myClasses, loadingMyClasses,  enrollingInProcess, moveToMyClasses
+       myClasses, loadingMyClasses,  enrollingInProcess, moveToMyClasses,
+       myCurrentChapters, setMyCurrentChapters
     }}>
       {children}
     </AllSubjectsContext.Provider>
