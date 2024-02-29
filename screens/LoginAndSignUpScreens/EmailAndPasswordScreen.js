@@ -13,6 +13,7 @@ const EmailAndPasswordScreen = () => {
 
   const { signInWithBothEmailAndPassword, userDetails, setUserDetails} = useUserDataContext();
 
+  console.log('Here are the user details',userDetails)
 
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');

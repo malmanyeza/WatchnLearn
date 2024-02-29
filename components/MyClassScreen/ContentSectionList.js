@@ -1,4 +1,4 @@
-import React,{useCallback, memo, useEffect} from 'react';
+import React,{useCallback, memo, useEffect, useDebugValue} from 'react';
 import { View, SectionList, StyleSheet, Text } from 'react-native';
 import VideoOrBookContainer from './VideoOrBookContainer';
 import CircularProgressBar from './CircularProgressBar';
@@ -12,14 +12,10 @@ const ContentList = () => {
 
   const {theme} = useThemeContext()
 
-  const {myCurrentChapters} = useAllSubjectsContext()
-
-  useEffect(()=>{
-    console.log('Here are my current chapters in MyClass Screen',myCurrentChapters)
-    console.log('Here is the old content structure:',content)
-  },[myCurrentChapters])
+  const {myCurrentChapters, setMyContentState, myContentState, storeDownloadedContentPathInAsyncStorage, myClasses} = useAllSubjectsContext()
 
   const {contentDetails,setContentDetails, questions, setQuestions, content, week, classContent} = useContentContext();
+  
 
   const navigation  = useNavigation()
 
@@ -27,6 +23,37 @@ const ContentList = () => {
     setQuestions(item.questions)
     navigation.navigate('Quize')
   })
+
+
+  useEffect(()=>{
+    console.log("Here is the class content",classContent)
+  },[classContent])
+
+  const downloadContent = (chapterId, topicName, firebaseUrl)=>{
+   
+
+   setMyContentState(prevState => ({
+      ...prevState,
+      currentChapter: chapterId,
+      currentContent: topicName,
+      currentContentUrl:firebaseUrl
+    }))
+    
+  }
+
+
+
+  useEffect(() => {
+    if (!myContentState.currentSubject || !myContentState.currentTerm || !myContentState.currentChapter || !myContentState.currentContent) {
+      console.log('ContentState not complete', myContentState)
+      return;
+    }
+
+    storeDownloadedContentPathInAsyncStorage(myClasses, myContentState, myContentState.currentContentUrl);
+  }, [myContentState]);
+
+
+
 
   const goToVidOrPDF = useCallback ((item)=>{
     
@@ -40,7 +67,7 @@ const ContentList = () => {
     
   
   
-  const renderSectionHeader = ({ section: { chapterTitle, data } }) => {
+  const renderSectionHeader = ({ section: { name, data } }) => {
     
     
       return (
@@ -49,13 +76,13 @@ const ContentList = () => {
             styles.sectionHeader,
             {backgroundColor:theme.colors.primaryBackground}
           ]
-        }>
+        }>  
           <Text style={
             [
               styles.sectionHeaderText,
               {color:theme.colors.text}
             ]
-          }>{chapterTitle}</Text>
+          }>{name}</Text>
         </View>
       );
     
@@ -63,14 +90,14 @@ const ContentList = () => {
   };
   
 
-  const renderItem = ({ item }) => (
+  const renderItem = ( {item, chapterId }) => (
     item.contentType === 'quize' ?
     (item.week === week ?
-      (<QuizeContainer title={item.title} duration={item.duration} onPressHandle={() => goToQuize(item)} noOfQuestions={item.noOfQuestions} />)
+      (<QuizeContainer title={item.topicName} duration={item.duration} onPressHandle={() => goToQuize(item)} noOfQuestions={item.noOfQuestions} onPressDownloadButton={()=>downloadContent(chapterId,item.title)}/>)
       : null)
     :
     (
-      <VideoOrBookContainer title={item.title} contentType={item.contentType} duration={item.duration} onPressHandle={() => goToVidOrPDF(item)} />
+      <VideoOrBookContainer title={item.topicName} contentType={item.contentType} duration={item.duration} onPressHandle={() => goToVidOrPDF(item)} onPressDownloadButton={()=>downloadContent(chapterId,item.topicName,item.contentUrl)} downloadPath={item.downloadFilePath}/>
       )
   );
 
@@ -80,11 +107,11 @@ const ContentList = () => {
   return (
     <View style={styles.container}>
       {
-        content?
+        classContent?
         <SectionList
-          sections={content}
+          sections={classContent}
           keyExtractor={(item, index) => item + index}
-          renderItem={renderItem}
+          renderItem={({ item, section }) => renderItem({ item, chapterId: section.id  })}
           renderSectionHeader={renderSectionHeader}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
         />

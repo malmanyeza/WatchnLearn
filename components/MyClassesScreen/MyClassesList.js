@@ -10,26 +10,35 @@ import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 const MyClassesList = () => {
 
-  const {getIntoClass, } = useContentContext()
-  const {myClasses, loadingClasses,unEnroll, setMyCurrentChapters, myCurrentChapters} = useAllSubjectsContext()
+  const {getIntoClass, classContent,isGoToClassButtonPressed, setIsGoToClassButtonPressed} = useContentContext()
+  const {myClasses, loadingClasses,unEnroll, setMyCurrentChapters, myCurrentChapters, setMyContentState} = useAllSubjectsContext()
 
   const {theme} = useThemeContext()
 
   const navigation = useNavigation()
 
-  useEffect(()=>{
-    if(myCurrentChapters.length>0){
-      console.log('Here is my current chapters:',myCurrentChapters)
-      navigation.navigate('MyClass')
-    }
-  }
-  ,[myCurrentChapters])
 
-  const goToClass =(item)=>{
- 
-   
+  const goToClass =(item, subjectId)=>{
+
+    getIntoClass(subjectId,item.termId)
     setMyCurrentChapters(item.chapters)
+    console.log('Here are my current chapters',classContent)
+    setMyContentState(prevState => ({
+      ...prevState,
+      currentSubject: subjectId,
+      currentTerm: item.termId
+    }));
+    navigation.navigate('MyClass')
   }
+
+
+  // useEffect(()=>{
+  //   if(classContent.length>0&&isGoToClassButtonPressed){
+  //     console.log('Here is my current chapters:',myCurrentChapters)
+  //     navigation.navigate('MyClass')
+  //     setIsGoToClassButtonPressed(false)
+  //   }
+  // },[classContent, isGoToClassButtonPressed])
 
   const goToQuestionPapers =()=>{
     navigation.navigate('QuestionPapers')
@@ -107,7 +116,7 @@ const MyClassesList = () => {
        subjectImage={subImage}
        progress={20}
        term={item.term}
-       goToClass={()=>goToClass(item)}
+       goToClass={()=>goToClass(item, subjectId)}
       />
     );
   };

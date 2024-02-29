@@ -99,6 +99,7 @@ export const ContentProvider = ({ children }) => {
       {
         title: 'Atomic Structure',
         week:1,
+        chapterId:'walslatelariaoroaroe',
         data: [
           { id: 1, title: 'Introduction to Atoms', contentType: 'pdf', duration:'20m' , content:require('../assets/PDFs/SamplePDF.pdf'), week:1},
           { id: 2, title: 'Protons, Neutrons, and Electrons', contentType: 'video', duration:'30m', content:require('../assets/Videos/SampleVid.mp4'), week:1 },
@@ -108,6 +109,7 @@ export const ContentProvider = ({ children }) => {
       {
         title: 'Chemical Bonding',
         week:1,
+        chapterId:'walslatelariaoroaroe',
         data: [
           { id: 4, title: 'Ionic Bonding', contentType: 'video', duration:'40m', content:require('../assets/Videos/SampleVid.mp4'), week:1},
           { id: 5, title: 'Covalent Bonding', contentType: 'pdf', duration:'35m', content:require('../assets/PDFs/SamplePDF.pdf'), week:1 },
@@ -118,6 +120,7 @@ export const ContentProvider = ({ children }) => {
       {
         title: 'Chemical Equilibrium',
         week:1,
+        chapterId:'walslatelariaoroaroe',
         data: [
           { id: 7, title: 'Introduction to Chemical Equilibrium', contentType: 'pdf', duration:'15m' , content:require('../assets/PDFs/SamplePDF.pdf'),week:1},
           { id: 8, title: 'Le Chatelier\'s Principle', contentType: 'pdf', duration:'20m', content:require('../assets/PDFs/SamplePDF.pdf'),week:1 },
@@ -127,6 +130,7 @@ export const ContentProvider = ({ children }) => {
       {
         title: 'Organic Chemistry',
         week:1,
+        chapterId:'walslatelariaoroaroe',
         data: [
           { id: 10, title: 'Introduction to Organic Chemistry', contentType: 'video', duration:'25m', content:require('../assets/Videos/SampleVid.mp4'),week:1 },
           { id: 11, title: 'Alkanes and Alkenes', contentType: 'video', duration:'30m', content:require('../assets/Videos/SampleVid.mp4'),week:1 },
@@ -136,6 +140,7 @@ export const ContentProvider = ({ children }) => {
       {
           title: 'Chemical Reactions',
           week:1,
+          chapterId:'walslatelariaoroaroe',
           data: [
             { id: 13, title: 'Introduction to Chemical Reactions', contentType: 'pdf', duration:'20m', content:require('../assets/PDFs/SamplePDF.pdf'),week:1 },
             { id: 14, title: 'Types of Chemical Reactions', contentType: 'video', duration:'30m' , content:require('../assets/Videos/SampleVid.mp4'),week:1},
@@ -145,6 +150,7 @@ export const ContentProvider = ({ children }) => {
         {
           title: 'States of Matter',
           week:2,
+          chapterId:'walslatelariaoroaroe',
           data: [
             { id: 16, title: 'Introduction to States of Matter', contentType: 'pdf', duration:'40m', content:require('../assets/PDFs/SamplePDF.pdf'), week:2 },
             { id: 17, title: 'Gas Laws', contentType: 'pdf', duration:'35m', content:require('../assets/PDFs/SamplePDF.pdf') , week:2},
@@ -154,6 +160,7 @@ export const ContentProvider = ({ children }) => {
         {
           title: 'Acids and Bases',
           week:2,
+          chapterId:'walslatelariaoroaroe',
           data: [
             { id: 19, title: 'Introduction to Acids and Bases', contentType: 'video', duration:'15m', content:require('../assets/Videos/SampleVid.mp4'), week:2 },
             { id: 20, title: 'pH Scale', contentType: 'pdf', duration:'20m' , content:require('../assets/PDFs/SamplePDF.pdf'), week:2},
@@ -166,7 +173,8 @@ export const ContentProvider = ({ children }) => {
   const [totalQuestions, setTotalQuestions] = useState(0)
   const [feedback, setFeedback] = useState(null)
   const [week, setWeek] = useState(1)
-  const [classContent, setClassContent] = useState(null)
+  const [classContent, setClassContent] = useState([])
+  const [isGoToClassButtonPressed, setIsGoToClassButtonPressed] = useState(false)
 
  const {myClasses} = useAllSubjectsContext()
   
@@ -176,13 +184,15 @@ export const ContentProvider = ({ children }) => {
       let myContentData = [];
       
       // Check if myClasses contains the subject and term data
-      const subjectTerm = myClasses.find(subject => subject.id === subjectId)?.terms.find(term => term.id === termId);
-      
+      const subjectTerm = myClasses.find(subject => subject.subjectId === subjectId)?.terms.find(term => term.termId === termId);
+     
       if (subjectTerm) {
           // If the subject and term data is available in myClasses, use it
-          myContentData = subjectTerm.classContent;
+          myContentData = subjectTerm.chapters;
           setClassContent(myContentData);
           console.log('Here is my term data:', myContentData)
+          setIsGoToClassButtonPressed(true)
+          return
       } else {
           // If the subject and term data is not available, fetch it from Firebase
           const firestore = getFirestore(app);
@@ -218,6 +228,7 @@ export const ContentProvider = ({ children }) => {
 
           // Set myContentData and update myClasses with the fetched data
           setClassContent(myContentData);
+          setIsGoToClassButtonPressed(true)
           // Update myClasses with the fetched class content
           const updatedMyClasses = myClasses.map(subject => {
               if (subject.id === subjectId) {
@@ -247,7 +258,8 @@ export const ContentProvider = ({ children }) => {
     <ContentContext.Provider value={{
        contentDetails, setContentDetails, questions, setQuestions,
        totalQuestions, correctQuestions, setCorrectQuestions, setTotalQuestions,
-       feedback,setFeedback, content, setContent, week, setWeek, getIntoClass, classContent
+       feedback,setFeedback, content, setContent, week, setWeek, getIntoClass, classContent,
+       isGoToClassButtonPressed, setIsGoToClassButtonPressed
        }}>
       {children}
     </ContentContext.Provider>

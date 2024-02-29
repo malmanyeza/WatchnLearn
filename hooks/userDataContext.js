@@ -36,6 +36,7 @@ export const UserDataProvider = ({ children }) => {
           if (userData) {
             setUserDetails(JSON.parse(userData));
             setLoadingUser(false)
+            console.log('User data fetched from AsyncStorage:', userDetails);
           } else {
             // If userData is not in AsyncStorage, fetch it from Firestore and store in AsyncStorage
             try {
@@ -69,11 +70,14 @@ export const UserDataProvider = ({ children }) => {
     try {
       setLoadingUser(true);
       const userCredential = await createUserWithEmailAndPassword(auth, userDetails.email, userDetails.password);
-
+  
       const { firstName, lastName, phone, school, email } = userDetails;
-
+  
+      let userDocRef; // Define user document reference
+  
       try {
-        const docRef = await addDoc(collection(db, 'students'), {
+        // Add user details to Firestore
+        userDocRef = await addDoc(collection(db, 'students'), {
           firstName,
           lastName,
           phone,
@@ -81,28 +85,32 @@ export const UserDataProvider = ({ children }) => {
           school,
           userId: userCredential.user.uid,
         });
-
-        console.log('User details added with ID:', docRef.id);
-        await AsyncStorage.setItem('userData', JSON.stringify(userDetails));
+  
+        console.log('User details added with ID:', userDocRef.id);
       } catch (firestoreError) {
         throw new Error(`Error adding user details to Firestore: ${firestoreError.message}`);
       }
-
+  
       setUser(userCredential.user);
-
+  
       try {
+        // Sign in user
         await signInWithEmailAndPassword(auth, userDetails.email, userDetails.password);
       } catch (signInError) {
         throw new Error(`Error signing in user: ${signInError.message}`);
       }
-
+  
       setIsLoggedIn(true);
       setLoadingUser(false);
+  
+      // Store userDetails in AsyncStorage after successful signup and Firestore update
+      await AsyncStorage.setItem('userData', JSON.stringify(userDetails));
     } catch (error) {
       alert(error.message);
       setLoadingUser(false);
     }
   };
+  
 
   const signInWithBothEmailAndPassword = async () => {
     try {
@@ -110,15 +118,24 @@ export const UserDataProvider = ({ children }) => {
       await signInWithEmailAndPassword(auth, userDetails.email, userDetails.password);
       setIsLoggedIn(true);
       setLoadingUser(false);
+  
+      // Store userDetails in AsyncStorage after successful sign-in
+      await AsyncStorage.setItem('userData', JSON.stringify(userDetails));
     } catch (error) {
       alert(error.message);
       setLoadingUser(false);
     }
   };
+  
 
   const logout = async () => {
     try {
+  
+      // Sign out the user
       await auth.signOut();
+
+      // Remove userData from AsyncStorage
+      await AsyncStorage.removeItem('userData');
       setIsLoggedIn(false);
     } catch (error) {
       console.error('Error logging out:', error.message);

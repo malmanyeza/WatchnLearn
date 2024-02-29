@@ -17,6 +17,13 @@ export const AllSubjectsProvider = ({ children }) => {
   const [enrollingInProcess, setEnrollingInProcess] = useState(false);
   const [moveToMyClasses, setMoveToMyClasses] = useState(false);
   const [myCurrentChapters, setMyCurrentChapters] = useState([]);
+  const [myContentState, setMyContentState] = useState({
+    currentChapter: null,
+    currentContent: null,
+    currentTerm: null,
+    currentSubject: null,
+    currentContentUrl:null
+  })
 
 
 
@@ -119,7 +126,30 @@ export const AllSubjectsProvider = ({ children }) => {
   }, []);
 
 
-
+const maClasses = [{
+  name: '',
+  id:'',
+  terms:[
+    {
+      id:'',
+      name:'',
+      chapters:[
+        {
+          id:'',
+          name:'',
+          data:[
+            {
+              id:'',
+              contentType:'',
+              name:'',
+              contentUrl:''
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}]
 
 
 
@@ -233,13 +263,13 @@ const storeClassInAsyncStorage = async (subjectId, subjectName, myClassData, ima
           id: chapterId,
           name: chapterData.name,
           week: chapterData.week,
-          content: [],
+          data: [],
         };
         
         // Fetch contents from the chapter document's 'contents' collection
         const contentsCollectionRef = collection(chapterDoc.ref, 'contents');
         const contentsSnapshot = await getDocs(contentsCollectionRef);
-        chapter.content = contentsSnapshot.docs.map(contentDoc => {
+        chapter.data = contentsSnapshot.docs.map(contentDoc => {
           const contentData = contentDoc.data();
           return {
             id: contentDoc.id,
@@ -363,6 +393,74 @@ const storeClassInAsyncStorage = async (subjectId, subjectName, myClassData, ima
       console.error('Error deleting subject from AsyncStorage:', error);
     }
   };
+
+
+  // A function to download content and store it in async storage
+
+  const storeDownloadedContentPathInAsyncStorage = async (myClases, myCurrentContentState, firebaseUrl) => {
+    const { currentSubject, currentTerm, currentChapter, currentContent } = myCurrentContentState;
+
+    console.log(myCurrentContentState)
+  
+    const downloadAndSaveVideo = async (videoUrl, videoTitle) => {
+      try {
+        const videoName = `${videoTitle}.mp4`; // Construct video name from video title
+        const videoPath = `${RNFetchBlob.fs.dirs.DocumentDir}/${videoName}`;
+    
+        const res = await RNFetchBlob.config({
+          fileCache: true,
+          appendExt: 'mp4',
+          path: videoPath,
+          progress: (received, total) => {
+            const progress = (received / total) * 100;
+            console.log(`Downloaded ${progress.toFixed(2)}%`);
+          }
+        }).fetch('GET', videoUrl);
+  
+    
+        console.log('Video downloaded to:', videoPath);
+        return videoPath;
+      } catch (error) {
+        console.error('Error downloading and saving video:', error);
+        throw error;
+      }
+    };
+  
+    try {
+      const subjectIndex = myClases.findIndex(subject => subject.subjectId== currentSubject);
+      if (subjectIndex === -1) {
+        throw new Error('Subject not found in myClasses');
+      }
+  
+      const termIndex = myClases[subjectIndex].terms.findIndex(term => term.termId === currentTerm);
+      if (termIndex === -1) {
+        throw new Error('Term not found in myClasses');
+      }
+  
+      const chapterIndex = myClases[subjectIndex].terms[termIndex].chapters.findIndex(chapter => chapter.id === currentChapter);
+      if (chapterIndex === -1) {
+        throw new Error('Chapter not found in myClasses');
+      }
+  
+      const contentIndex = myClases[subjectIndex].terms[termIndex].chapters[chapterIndex].data.findIndex(content => content.topicName === currentContent);
+      if (contentIndex === -1) {
+        throw new Error('Content not found in myClasses');
+      }
+  
+      const localImagePath = await downloadAndSaveVideo(firebaseUrl, currentContent);
+  
+      // Update the content object with the downloadFilePath
+      myClasses[subjectIndex].terms[termIndex].chapters[chapterIndex].data[contentIndex].downloadFilePath = localImagePath;
+  
+      // Store the updated myClasses in AsyncStorage
+      await AsyncStorage.setItem('myAsyncStorageClasses', JSON.stringify(myClasses));
+  
+      console.log('Downloaded content path stored in AsyncStorage:', localImagePath);
+    } catch (error) {
+      console.error('Error storing downloaded content path:', error);
+      throw new Error('Failed to store downloaded content path');
+    }
+  };
   
   
 
@@ -373,7 +471,8 @@ const storeClassInAsyncStorage = async (subjectId, subjectName, myClassData, ima
       subjects: memoizedSubjects, filteredSubjects, 
       setFilteredSubjects, loadingSubjects, enroll, unEnroll,
        myClasses, loadingMyClasses,  enrollingInProcess, moveToMyClasses,
-       myCurrentChapters, setMyCurrentChapters
+       myCurrentChapters, setMyCurrentChapters, myContentState, setMyContentState,
+       storeDownloadedContentPathInAsyncStorage
     }}>
       {children}
     </AllSubjectsContext.Provider>

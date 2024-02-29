@@ -11,9 +11,14 @@ const VideoScreen = () => {
   const screenHeight = Dimensions.get('window').height;
   const [isPlaying, setIsPlaying] = useState(true);
 
-  const vid = require("../assets/Videos/SampleVid.mp4")
+  const { title, downloadFilePath, contentUrl } = contentDetails;
 
-  console.log(vid)
+  let videoSource;
+  if (downloadFilePath) {
+    videoSource = `file://${downloadFilePath}`; // Use downloadFilePath with file:// prefix
+  } else {
+    videoSource = contentUrl; // Fallback to contentUrl
+  }
 
   const [playbackInstanceInfo, setPlaybackInstanceInfo] = useState({
     position: 0,
@@ -49,7 +54,7 @@ const VideoScreen = () => {
     <View style={styles.container}>
       <Header title={item.title} />
       <Video
-        source={vid} // Use uri for the source
+        source={{uri:videoSource}} // Use uri for the source
         ref={playbackInstance}
         style={{ height: '30%', width: '100%', top: 0 }}
         paused={!isPlaying} // Use paused instead of shouldPlay
