@@ -404,19 +404,21 @@ const storeClassInAsyncStorage = async (subjectId, subjectName, myClassData, ima
   
     const downloadAndSaveVideo = async (videoUrl, videoTitle) => {
       try {
-        const videoName = `${videoTitle}.mp4`; // Construct video name from video title
+        const videoName = `${videoTitle}.mp4`;
         const videoPath = `${RNFetchBlob.fs.dirs.DocumentDir}/${videoName}`;
     
-        const res = await RNFetchBlob.config({
+        const task = RNFetchBlob.config({
           fileCache: true,
           appendExt: 'mp4',
           path: videoPath,
-          progress: (received, total) => {
-            const progress = (received / total) * 100;
-            console.log(`Downloaded ${progress.toFixed(2)}%`);
-          }
         }).fetch('GET', videoUrl);
-  
+    
+        task.progress((received, total) => {
+          const progress = (received / total) * 100;
+          console.log(`Downloaded ${progress.toFixed(2)}%`);
+        });
+    
+        const res = await task;
     
         console.log('Video downloaded to:', videoPath);
         return videoPath;
