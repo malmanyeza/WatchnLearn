@@ -2,10 +2,13 @@ import React,{memo} from 'react';
 import { View, Text, StyleSheet,TouchableOpacity } from 'react-native';
 import Ionicons  from 'react-native-vector-icons/Ionicons';
 import { useThemeContext } from '../../hooks/themeContext';
+import { useAllSubjectsContext } from '../../hooks/allSubjectsContext';
+import CircularProgressBar from './CircularProgressBar';
 
 const VideoOrBookContainer = ({ title, contentType, duration, onPressHandle, onPressDownloadButton,downloadPath }) => {
 
 const {theme} = useThemeContext()
+const {downloadStatus} = useAllSubjectsContext()
 
   return (
     <TouchableOpacity onPress={onPressHandle} style={
@@ -26,6 +29,11 @@ const {theme} = useThemeContext()
         <Text style={[styles.subtitle,{color: theme.colors.secondaryText}]}>{contentType==='video' ? 'Video' : 'Reading'}.({duration})</Text>
       </View>
       {downloadPath ? <Ionicons name="checkmark-circle" size={25} color={theme.colors.text} /> 
+        :
+        downloadStatus.status&&downloadStatus.title==title?
+        <CircularProgressBar
+          progress={downloadStatus.progress}
+        />
         :
         <TouchableOpacity onPress={onPressDownloadButton} >
           <Ionicons name="cloud-download-outline" size={24} color={theme.colors.text} />

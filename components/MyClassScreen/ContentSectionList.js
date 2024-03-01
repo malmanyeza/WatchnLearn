@@ -49,7 +49,7 @@ const ContentList = () => {
       return;
     }
 
-    storeDownloadedContentPathInAsyncStorage(myClasses, myContentState, myContentState.currentContentUrl);
+    storeDownloadedContentPathInAsyncStorage(myContentState, myContentState.currentContentUrl);
   }, [myContentState]);
 
 
