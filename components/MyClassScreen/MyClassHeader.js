@@ -43,36 +43,12 @@ const MyClassHeader = ({title, navigateTo}) => {
           <Ionicons name="shield-outline" size={35} color={Colors.primary} />
         </TouchableOpacity> 
       </View>
-      <View style={styles.lowerContain}>
-        <View style={styles.iconContainer}>
-          <Image
-            source={require('../../assets/images/icons8-flame-94.png')}
-            style={styles.icon}
-          />
-          <Text style={styles.iconText}>13</Text>
-        </View>
-        <View style={styles.iconContainer}>
-          <Image
-            source={require('../../assets/images/icons8-emerald-96.png')}
-            style={styles.icon}
-          />
-          <Text style={[styles.iconText,{color:theme.colors.secondaryText}]}>194</Text>
-        </View>
-        <View style={styles.iconContainer}>
-          <Image
-            source={require('../../assets/images/icons8-heart-96.png')}
-            style={styles.icon}
-          />
-          <Text style={styles.iconText}>4</Text>
-        </View>
-      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   outerContainer:{
-    borderBottomWidth:2,
     paddingHorizontal:10
   },
   container: {
@@ -100,12 +76,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontFamily:'ComicNeue-Bold',
-  },
-  lowerContain:{
-    flexDirection:'row',
-    paddingHorizontal:10,
-    justifyContent:'space-around',
-    marginVertical:10,
   },
   icon:{
     width:30,

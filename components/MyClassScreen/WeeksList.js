@@ -57,8 +57,8 @@ const WeeksList = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 35,
-    paddingVertical: 5,
+    marginTop: 40,
+    marginBottom: 20,
   },
   weekButton: {
     paddingHorizontal: 20,

@@ -3,11 +3,23 @@ import { View, StyleSheet } from 'react-native';
 import Header from '../components/Header';
 import Pdf from 'react-native-pdf';
 import { useThemeContext } from '../hooks/themeContext';
+import { useContentContext } from '../hooks/contentContext';
 
-const PDFScreen = () => {
-  const pdf = 'https://firebasestorage.googleapis.com/v0/b/watchnlearn-36e32.appspot.com/o/contents%2FFix%20React%20Component%20Error.pdf?alt=media&token=69d6bd62-1060-4a11-82a5-3c94f58d24ba';
+const PDFScreen = ({}) => {
 
+  const {contentDetails} = useContentContext()
+  const {contentUrl,downloadFilePath} = contentDetails
   const {theme} = useThemeContext()
+
+  let pdfSource;
+  if (downloadFilePath) {
+    pdfSource = `file://${downloadFilePath}`; // Use downloadFilePath with file:// prefix
+  } else {
+    pdfSource = contentUrl; // Fallback to contentUrl
+  }
+
+
+
 
   return (
     <View style={
@@ -15,7 +27,8 @@ const PDFScreen = () => {
     }>
       <Header title={'PDF'} />
       <Pdf 
-        source={{ uri: pdf, cache: true }}
+        trustAllCerts={false}
+        source={{ uri: pdfSource, cache: true }}
         onLoadComplete={(numberOfPages,filePath) => {
           console.log(`Number of pages: ${numberOfPages}`);
         }}

@@ -26,9 +26,9 @@ const {downloadStatus} = useAllSubjectsContext()
       }
       <View style={styles.infoContainer}>
         <Text style={[styles.title, {color: theme.colors.text}]}>{title}</Text>
-        <Text style={[styles.subtitle,{color: theme.colors.secondaryText}]}>{contentType==='video' ? 'Video' : 'Reading'}.({duration})</Text>
+        <Text style={[styles.subtitle,{color: theme.colors.secondaryText}]}>{contentType==='video' ? 'Video' : 'Reading'} . {duration}</Text>
       </View>
-      {downloadPath ? <Ionicons name="checkmark-circle" size={25} color={theme.colors.text} /> 
+      {downloadPath ? <Ionicons name="trash-outline" size={20} color={theme.colors.text} /> 
         :
         downloadStatus.status&&downloadStatus.title==title?
         <CircularProgressBar
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 25,
+    paddingVertical: 20,
     backgroundColor: 'white',
   },
   infoContainer: {
@@ -61,8 +61,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   subtitle: {
-    fontFamily:'ComicNeue-Bold',
-    fontSize: 18,
+    marginTop: 4,
+    fontFamily:'ComicNeue-Regular',
+    fontSize: 16,
     color: '#666',
   },
 });

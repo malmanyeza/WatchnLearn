@@ -22,7 +22,8 @@ export const AllSubjectsProvider = ({ children }) => {
     currentContent: null,
     currentTerm: null,
     currentSubject: null,
-    currentContentUrl:null
+    currentContentUrl:null,
+    currentContentType: null,
   })
   const [downloadStatus, setDownloadStatus] = useState({
     status: false,
@@ -270,6 +271,7 @@ const storeClassInAsyncStorage = async (subjectId, subjectName, myClassData, ima
           name: chapterData.name,
           week: chapterData.week,
           data: [],
+          position: chapterData.position,
         };
         
         // Fetch contents from the chapter document's 'contents' collection
@@ -282,6 +284,8 @@ const storeClassInAsyncStorage = async (subjectId, subjectName, myClassData, ima
             topicName: contentData.topicName,
             contentType: contentData.contentType,
             contentUrl: contentData.contentUrl,
+            position: contentData.position,
+            duration: contentData.timeframe,
           };
         });
         
@@ -403,12 +407,8 @@ const storeClassInAsyncStorage = async (subjectId, subjectName, myClassData, ima
 
   // A function to download content and store it in async storage
 
-  const storeDownloadedContentPathInAsyncStorage = async ( myCurrentContentState, firebaseUrl) => {
+  const storeDownloadedContentPathInAsyncStorage = async (myCurrentContentState, firebaseUrl, contentType) => {
     const { currentSubject, currentTerm, currentChapter, currentContent } = myCurrentContentState;
-
-    console.log(myCurrentContentState)
-
-    
   
     const downloadAndSaveVideo = async (videoUrl, videoTitle) => {
       try {
@@ -432,66 +432,140 @@ const storeClassInAsyncStorage = async (subjectId, subjectName, myClassData, ima
         setDownloadStatus({ status: false, progress: 100 });
         return videoPath;
       } catch (error) {
+        setMyContentState(prevState => ({
+          ...prevState,
+          currentContent: null,
+          currentContentUrl: null
+        }));
         console.error('Error downloading and saving video:', error);
         throw error;
       }
     };
   
+    const downloadAndSavePdf = async (pdfUrl, pdfTitle) => {
+      try {
+        const pdfName = `${pdfTitle}.pdf`;
+        const pdfPath = `${RNFetchBlob.fs.dirs.DocumentDir}/${pdfName}`;
+    
+        const task = RNFetchBlob.config({
+          fileCache: true,
+          appendExt: 'pdf',
+          path: pdfPath,
+        }).fetch('GET', pdfUrl);
+    
+        task.progress((received, total) => {
+          const progress = Math.round((received / total) * 100);
+          setDownloadStatus({ status: true, progress: progress ,title: pdfTitle });
+        });
+    
+        const res = await task;
+    
+        console.log('PDF downloaded to:', pdfPath);
+        setDownloadStatus({ status: false, progress: 100 });
+        return pdfPath;
+      } catch (error) {
+        setMyContentState(prevState => ({
+          ...prevState,
+          currentContent: null,
+          currentContentUrl: null
+        }));
+        console.error('Error downloading and saving PDF:', error);
+        throw error;
+      }
+    };
+  
     try {
-      const subjectIndex = myClasses.findIndex(subject => subject.subjectId== currentSubject);
+      const subjectIndex = myClasses.findIndex(subject => subject.subjectId === currentSubject);
       if (subjectIndex === -1) {
+        setMyContentState(prevState => ({
+          ...prevState,
+          currentContent: null,
+          currentContentUrl: null
+        }));
         throw new Error('Subject not found in myClasses');
       }
   
       const termIndex = myClasses[subjectIndex].terms.findIndex(term => term.termId === currentTerm);
       if (termIndex === -1) {
+        setMyContentState(prevState => ({
+          ...prevState,
+          currentContent: null,
+          currentContentUrl: null
+        }));
         throw new Error('Term not found in myClasses');
       }
   
       const chapterIndex = myClasses[subjectIndex].terms[termIndex].chapters.findIndex(chapter => chapter.id === currentChapter);
       if (chapterIndex === -1) {
+        setMyContentState(prevState => ({
+          ...prevState,
+          currentContent: null,
+          currentContentUrl: null
+        }));
         throw new Error('Chapter not found in myClasses');
       }
   
       const contentIndex = myClasses[subjectIndex].terms[termIndex].chapters[chapterIndex].data.findIndex(content => content.topicName === currentContent);
       if (contentIndex === -1) {
+        setMyContentState(prevState => ({
+          ...prevState,
+          currentContent: null,
+          currentContentUrl: null
+        }));
         throw new Error('Content not found in myClasses');
       }
   
-      const localImagePath = await downloadAndSaveVideo(firebaseUrl, currentContent);
+      let localFilePath;
+      if (contentType === 'pdf') {
+        localFilePath = await downloadAndSavePdf(firebaseUrl, currentContent);
+      } else if (contentType === 'video') {
+        localFilePath = await downloadAndSaveVideo(firebaseUrl, currentContent);
+      } else {
+        setMyContentState(prevState => ({
+          ...prevState,
+          currentContent: null,
+          currentContentUrl: null
+        }));
+        throw new Error('Unsupported contentType');
+      }
   
       // Update the content object with the downloadFilePath
       const updatedMyClasses = [...myClasses];
       const updatedSubject = { ...updatedMyClasses[subjectIndex] };
       const updatedTerm = { ...updatedSubject.terms[termIndex] };
       const updatedChapter = { ...updatedTerm.chapters[chapterIndex] };
-      const updatedContent = { ...updatedChapter.data[contentIndex], downloadFilePath: localImagePath };
-
+      const updatedContent = { ...updatedChapter.data[contentIndex], downloadFilePath: localFilePath };
+  
       // Update the content object with the downloadFilePath
       updatedChapter.data[contentIndex] = updatedContent;
       updatedTerm.chapters[chapterIndex] = updatedChapter;
       updatedSubject.terms[termIndex] = updatedTerm;
       updatedMyClasses[subjectIndex] = updatedSubject;
-
+  
       // Set the updated myClasses
       setMyClasses(updatedMyClasses);
-
+  
       // Store the updated myClasses in AsyncStorage (if needed)
       await AsyncStorage.setItem('myAsyncStorageClasses', JSON.stringify(updatedMyClasses));
-
-
+  
       setMyContentState(prevState => ({
         ...prevState,
         currentContent: null,
-        currentContentUrl:null
-      }))
+        currentContentUrl: null
+      }));
   
-      console.log('Downloaded content path stored in AsyncStorage:', localImagePath);
+      console.log('Downloaded content path stored in AsyncStorage:', localFilePath);
     } catch (error) {
+      setMyContentState(prevState => ({
+        ...prevState,
+        currentContent: null,
+        currentContentUrl: null
+      }));
       console.error('Error storing downloaded content path:', error);
       throw new Error('Failed to store downloaded content path');
     }
   };
+  
   
   
 

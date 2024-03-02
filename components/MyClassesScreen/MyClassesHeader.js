@@ -39,26 +39,22 @@ const MyClassesHeader = ({title, navigateTo}) => {
       </View>
       <View style={styles.lowerContain}>
         <View style={styles.iconContainer}>
+          
           <Image
-            source={require('../../assets/images/icons8-flame-94.png')}
+            source={require('../../assets/images/icons8-lightning-94.png')}
             style={styles.icon}
           />
-          <Text style={[styles.iconText,{color:theme.colors.secondaryText}]}>13</Text>
+          <Text style={[
+            styles.iconText,{
+              color:theme.colors.text,
+              fontFamily:'ComicNeue-Bold',
+              fontSize:20,
+              padding:5,
+              color:Colors.primary,
+            }
+          ]}>13</Text>
         </View>
-        <View style={styles.iconContainer}>
-          <Image
-            source={require('../../assets/images/icons8-emerald-96.png')}
-            style={styles.icon}
-          />
-          <Text style={[styles.iconText,{color:theme.colors.secondaryText}]}>194</Text>
-        </View>
-        <View style={styles.iconContainer}>
-          <Image
-            source={require('../../assets/images/icons8-heart-96.png')}
-            style={styles.icon}
-          />
-          <Text style={[styles.iconText,{color:theme.colors.secondaryText}]}>4</Text>
-        </View>
+        
       </View>
     </View>
   );
@@ -104,12 +100,11 @@ const styles = StyleSheet.create({
   lowerContain:{
     flexDirection:'row',
     paddingHorizontal:10,
-    justifyContent:'space-around',
     marginVertical:10,
   },
   icon:{
     width:30,
-    height:30,
+    height:25,
     resizeMode:'contain',
     marginRight:3
   },
