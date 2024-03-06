@@ -1,5 +1,5 @@
 import React, { useState, useRef, memo, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, TouchableOpacity, Platform } from 'react-native';
+import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import Video from 'react-native-video';
 import Header from '../components/Header';
 import { useContentContext } from '../hooks/contentContext';
@@ -92,7 +92,7 @@ const VideoScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Header title={title} />
+      {!isFullScreen&&<Header title={title} />}
       <TouchableOpacity
         activeOpacity={1}
         style={[styles.videoPlayerContainer, { height: isFullScreen ? screenHeight : screenWidth / (16 / 9) }]}
@@ -121,14 +121,25 @@ const VideoScreen = () => {
           </TouchableOpacity>
         )}
         {showVideoControlIcons && isFullScreen && (
-          <TouchableOpacity style={styles.exitFullScreenIcon} onPress={handleExitFullScreen}>
+          <TouchableOpacity style={[
+            styles.exitFullScreenIcon,{
+              transform: isFullScreen ? [{ rotate: '90deg' }] : [],
+              bottom: isFullScreen ? '25%': '30%',
+            }
+          ]} onPress={handleExitFullScreen}>
             <Icon name="compress" size={30} color="white" />
           </TouchableOpacity>
         )}
 
         {/* Video Controls */}
         {showVideoControlIcons && (
-          <View style={styles.videoControls}>
+          <View style={[
+            styles.videoControls,{
+              transform: isFullScreen ? [{ rotate: '90deg' }] : [],
+              bottom: isFullScreen ? 0: '30%',
+              top: isFullScreen ? 0: 'auto',
+            }
+          ]}>
             <TouchableOpacity style={styles.controlButton} onPress={backward}>
               <Icon name="backward" size={30} color="white" />
             </TouchableOpacity>
@@ -140,12 +151,17 @@ const VideoScreen = () => {
             </TouchableOpacity>
           </View>
         )}
-
-        {/* Seek Slider */}
         {showVideoControlIcons && (
-          <View style={styles.sliderContainer}>
+          
             <Slider
-              style={styles.slider}
+              style={[
+                styles.sliderContainer,{
+                  transform: isFullScreen ? [{ rotate: '90deg' }] : [],
+                  top: isFullScreen ? null: 'auto',
+                  right: isFullScreen ? '35%': 'auto',
+                  bottom: isFullScreen ? '50%': 0,
+                }
+              ]}
               minimumValue={0}
               maximumValue={1}
               value={currentTime / duration}
@@ -154,9 +170,10 @@ const VideoScreen = () => {
               thumbTintColor="#FFFFFF"
               onValueChange={onSlide}
             />
-          </View>
         )}
+        
       </TouchableOpacity>
+      
     </View>
   );
 };
@@ -167,9 +184,9 @@ const styles = StyleSheet.create({
   },
   videoPlayerContainer: {
     backgroundColor: 'black',
-    position: 'relative',
   },
   videoPlayer: {
+    alignItems:'center',
     backgroundColor: 'black',
   },
   fullScreenIcon: {
@@ -181,10 +198,13 @@ const styles = StyleSheet.create({
   },
   exitFullScreenIcon: {
     position: 'absolute',
-    top: 10,
-    left: 10,
     padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     zIndex: 1,
+    left: 0,
+    right: 0,
   },
   videoControls: {
     position: 'absolute',
@@ -205,14 +225,12 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   sliderContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+   position: 'absolute',
     zIndex: 1,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    alignSelf: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    width: '100%',
+    height: 40,
   },
   slider: {
     width: '100%',
