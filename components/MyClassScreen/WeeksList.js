@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WeeksList;
+export default memo(WeeksList);

@@ -48,4 +48,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QuizeContainer;
+export default memo(QuizeContainer);

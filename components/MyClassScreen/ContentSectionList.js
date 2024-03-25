@@ -10,7 +10,7 @@ import { useAllSubjectsContext } from '../../hooks/allSubjectsContext';
 
 const ContentList = () => {
   const { theme } = useThemeContext();
-  const { myCurrentChapters, setMyContentState, myContentState, storeDownloadedContentPathInAsyncStorage, myClasses } = useAllSubjectsContext();
+  const { myCurrentChapters, setMyContentState, myContentState, storeDownloadedContentPathInAsyncStorage} = useAllSubjectsContext();
   const { contentDetails, setContentDetails, questions, setQuestions, content, week, classContent } = useContentContext();
   const navigation = useNavigation();
   const [filteredClassContent, setFilteredClassContent] = useState(null);
@@ -30,14 +30,26 @@ const ContentList = () => {
     }
   }, [week, classContent]);
   
-    
+  //This useEffect checks the myContentState and if the myContentState is complete, then run the storeDownloadedContent.... function
+  useEffect(() => {
+    if (!myContentState.currentSubject || !myContentState.currentTerm || !myContentState.currentChapter || !myContentState.currentContent) {
+      console.log('ContentState not complete', myContentState);
+      return;
+    }
+
+    storeDownloadedContentPathInAsyncStorage(
+      myContentState,
+      myContentState.currentContentUrl,
+      myContentState.currentContentType
+    );
+  }, [myContentState.currentContent]);
 
   const goToQuize = useCallback((item) => {
     setQuestions(item.questions);
     navigation.navigate('Quize');
   });
 
-  const downloadContent = (chapterId, topicName, firebaseUrl, contentType) => {
+  const downloadContent = useCallback((chapterId, topicName, firebaseUrl, contentType) => {
     setMyContentState((prevState) => ({
       ...prevState,
       currentChapter: chapterId,
@@ -47,16 +59,10 @@ const ContentList = () => {
     }));
 
     console.log('Here is the contentType', contentType);
-  };
+  }, []);
 
-  useEffect(() => {
-    if (!myContentState.currentSubject || !myContentState.currentTerm || !myContentState.currentChapter || !myContentState.currentContent) {
-      console.log('ContentState not complete', myContentState);
-      return;
-    }
-
-    storeDownloadedContentPathInAsyncStorage(myContentState, myContentState.currentContentUrl,myContentState.currentContentType);
-  }, [myContentState]);
+  
+  
 
   const goToVidOrPDF = useCallback((item) => {
     setContentDetails(item);

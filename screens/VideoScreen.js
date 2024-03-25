@@ -1,5 +1,5 @@
 import React, { useState, useRef, memo, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Dimensions, TouchableOpacity, Pressable } from 'react-native';
 import Video from 'react-native-video';
 import Header from '../components/Header';
 import { useContentContext } from '../hooks/contentContext';
@@ -92,7 +92,7 @@ const VideoScreen = () => {
 
   return (
     <View style={styles.container}>
-      {!isFullScreen&&<Header title={title} />}
+      <Header title={title} />
       <TouchableOpacity
         activeOpacity={1}
         style={[styles.videoPlayerContainer, { height: isFullScreen ? screenHeight : screenWidth / (16 / 9) }]}
@@ -151,6 +151,8 @@ const VideoScreen = () => {
             </TouchableOpacity>
           </View>
         )}
+
+        {/* Seek Slider */}
         {showVideoControlIcons && (
           
             <Slider
@@ -159,7 +161,7 @@ const VideoScreen = () => {
                   transform: isFullScreen ? [{ rotate: '90deg' }] : [],
                   top: isFullScreen ? null: 'auto',
                   right: isFullScreen ? '35%': 'auto',
-                  bottom: isFullScreen ? '50%': 0,
+                  bottom: isFullScreen ? '47.225%': 0,
                 }
               ]}
               minimumValue={0}
@@ -171,9 +173,7 @@ const VideoScreen = () => {
               onValueChange={onSlide}
             />
         )}
-        
       </TouchableOpacity>
-      
     </View>
   );
 };
@@ -184,9 +184,10 @@ const styles = StyleSheet.create({
   },
   videoPlayerContainer: {
     backgroundColor: 'black',
+    position: 'relative',
+    alignSelf:'center'
   },
   videoPlayer: {
-    alignItems:'center',
     backgroundColor: 'black',
   },
   fullScreenIcon: {
@@ -227,7 +228,9 @@ const styles = StyleSheet.create({
   sliderContainer: {
    position: 'absolute',
     zIndex: 1,
+    flexDirection: 'row',
     alignSelf: 'center',
+    paddingHorizontal: 20,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     width: '100%',
     height: 40,
