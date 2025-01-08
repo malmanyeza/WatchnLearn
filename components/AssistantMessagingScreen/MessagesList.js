@@ -10,11 +10,13 @@ const MessagesList = ({ messages }) => {
   // Scroll to bottom when messages change
   useEffect(() => {
     flatListRef.current?.scrollToEnd({ animated: true });
+    console.log("here is a list of messages:", messages)
   }, [messages]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.primaryBackground }]}>
       <FlatList
+        style={{paddingBottom:50}}
         ref={flatListRef}
         data={messages}
         renderItem={({ item }) => <MessageBox message={item} />}

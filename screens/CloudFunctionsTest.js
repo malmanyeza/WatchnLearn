@@ -4,10 +4,7 @@ import { app } from '../FirebaseConfig';
 import { getAuth, signInAnonymously } from 'firebase/auth';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: ''
- 
-});
+const openai = ''
 
 const CloudFunctionTest = () => {
   const [query, setQuery] = useState('');

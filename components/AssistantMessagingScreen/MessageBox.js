@@ -11,6 +11,9 @@ const MessageBox = ({ message }) => {
   const messageBoxStyle = isUser ? styles.userMessageBox : styles.assistantMessageBox;
   const messageTextStyle = isUser ? styles.userMessageText : styles.assistantMessageText;
 
+  // Safeguard against undefined or null `message.text`
+  const messageText = message.content ||''
+
   // Function to process the text and identify LaTeX or bold parts
   const processText = (text) => {
     const parts = [];
@@ -54,7 +57,7 @@ const MessageBox = ({ message }) => {
     }
   };
 
-  const parts = processText(message.text);
+  const parts = processText(messageText);
 
   return (
     <View style={[styles.messageBox, messageBoxStyle]}>
