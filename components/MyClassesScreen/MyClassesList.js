@@ -36,6 +36,12 @@ const MyClassesList = () => {
     navigation.navigate('MyClass');
   };
 
+  const goToTextbooks = (subjectId) => {
+    navigation.navigate('Textbooks');
+    
+  };
+
+
   const goToCourse = (courseId) => {
     getIntoCourse(courseId);
     setMyContentState(prevState => ({
@@ -161,24 +167,27 @@ const MyClassesList = () => {
 
     return (
       <View style={styles.subjectContainer}>
-        <View style={styles.headerContainer}>
-          <Text
+        <Text
             style={[
               styles.subjectText,
-              { color: theme.colors.text, maxWidth: width / 3 }, // Ensures text wraps if too long
+              { color: theme.colors.text, }, // Ensures text wraps if too long
             ]}
-            numberOfLines={2} // Limits the number of lines to 2
-            ellipsizeMode="tail" // Adds ellipsis if text overflows
           >
             {item.subject}
           </Text>
+        <View style={styles.headerContainer}>
+          
           <TouchableOpacity
+            style={[styles.syllabus,{ backgroundColor: theme.colors.secondaryBackground },]}
             onPress={() => goToPdfScreen({pdf:item.syllabusUrl})}
           >
-            <Text style={[styles.syllabus, { backgroundColor: theme.colors.secondaryBackground }, { color: theme.colors.text }]}>Syllabus</Text>
+            <Text style={[  { color: theme.colors.text, fontSize: FontSizes.caption,fontFamily:'ComicNeue-Bold' }]}>Syllabus</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>goToQuestionPapers(item.subjectId)}>
-            <Text style={[styles.syllabus, { backgroundColor: theme.colors.secondaryBackground }, { color: theme.colors.text }]}>Past papers</Text>
+          <TouchableOpacity style={[styles.syllabus,{ backgroundColor: theme.colors.secondaryBackground },]} onPress={()=>goToQuestionPapers(item.subjectId)}>
+            <Text style={[  { color: theme.colors.text, fontSize: FontSizes.caption,fontFamily:'ComicNeue-Bold' }]}>Past papers</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.syllabus,{ backgroundColor: theme.colors.secondaryBackground },]} onPress={goToTextbooks} >
+            <Text style={[  { color: theme.colors.text, fontSize: FontSizes.caption,fontFamily:'ComicNeue-Bold' }]}>Text books</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={openDeleteModal} style={styles.trashIcon}>
             <Icon name="trash-outline" size={20} color={theme.colors.text} />
@@ -247,9 +256,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   subjectText: {
-    fontSize: FontSizes.heading6,
+    fontSize: FontSizes.heading5,
     fontFamily: 'ComicNeue-Bold',
-    marginBottom: 5,
+    marginBottom: 10,
     marginLeft: 15,
   },
   syllabus: {
@@ -258,9 +267,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingVertical: 5,
     paddingHorizontal: 10,
-    marginLeft: 20,
+    marginLeft: 15,
+    marginRight:10,
     fontFamily: 'ComicNeue-Bold',
     fontSize: FontSizes.caption,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 3, // Android shadow
   },
   formContainer: {
     flex: 1,

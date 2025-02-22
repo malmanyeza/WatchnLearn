@@ -25,6 +25,7 @@ import { useThemeContext } from './hooks/themeContext';
 import { Tabs } from './Tabs';
 import LevelSelectionScreen from './screens/LoginAndSignUpScreens/LevelSelectionScreen';
 import HighSchoolLevelScreen from './screens/LoginAndSignUpScreens/HighSchoolLevelScreen';
+import TextbooksScreen from './screens/TextbooksScreen';
 
 const Stack = createStackNavigator();
 
@@ -59,6 +60,7 @@ const AppStack = () => {
     <Stack.Screen name="Achievements" component={AchievementsScreen} options={{ headerShown:false }}/>
     <Stack.Screen name="Friends" component={FriendsScreen} options={{ headerShown:false }}/>
     <Stack.Screen name="AssistantMessaging" component={AssistantMessagingScreen} options={{ headerShown:false }}/>
+    <Stack.Screen name="Textbooks" component={TextbooksScreen} options={{ headerShown:false }}/>
   </Stack.Navigator>
   )
   };

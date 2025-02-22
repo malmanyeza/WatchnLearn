@@ -7,8 +7,7 @@ import { useThemeContext } from '../../hooks/themeContext';
 const WeeksList = () => {
   const [activeWeek, setActiveWeek] = useState(1);
   const { setWeek } = useContentContext();
-
-  const {theme} = useThemeContext()
+  const { theme } = useThemeContext();
 
   const data = [...Array(12).keys()].map((week) => ({ id: week + 1 }));
 
@@ -21,18 +20,29 @@ const WeeksList = () => {
     <TouchableOpacity
       style={[
         styles.weekButton,
-        { backgroundColor: activeWeek === item.id ? theme.colors.secondaryBackground  : theme.colors.primaryBackground,
-          borderColor: activeWeek === item.id ? theme.colors.text : theme.colors.secondaryBackground,
-          color: activeWeek === item.id ? theme.colors.secondaryBackground : theme.colors.text,
-         },
+        {
+          backgroundColor:
+            activeWeek === item.id
+              ? theme.colors.secondaryBackground
+              : theme.colors.primaryBackground,
+          borderColor:
+            activeWeek === item.id
+              ? theme.colors.text
+              : theme.colors.secondaryBackground,
+          shadowColor: activeWeek === item.id ? theme.colors.text : '#000',
+          shadowOpacity: 0.2,
+          shadowRadius: 8,
+          shadowOffset: { width: 0, height: 4 },
+          elevation: activeWeek === item.id ? 8 : 5, // Android shadow
+        },
       ]}
       onPress={() => handleWeekPress(item.id)}
     >
       <Text
         style={{
-          fontFamily:activeWeek === item.id ? 'ComicNeue-Bold':'ComicNeue-Regular',
-          color: activeWeek === item.id ? 'white' : theme.colors.text,
-          fontSize:18
+          fontFamily: activeWeek === item.id ? 'ComicNeue-Bold' : 'ComicNeue-Regular',
+          color: theme.colors.text,
+          fontSize: 18,
         }}
       >
         WEEK {item.id}
@@ -41,12 +51,12 @@ const WeeksList = () => {
   );
 
   return (
-    <View style={
-      [
+    <View
+      style={[
         styles.container,
-        {backgroundColor:theme.colors.primaryBackground}
-      ]
-    }>
+        { backgroundColor: theme.colors.primaryBackground },
+      ]}
+    >
       <FlatList
         data={data}
         renderItem={renderItem}
@@ -60,8 +70,7 @@ const WeeksList = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
-    marginBottom: 20,
+    marginTop: 10,
   },
   weekButton: {
     paddingHorizontal: 20,
@@ -69,6 +78,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     marginLeft: 10,
+    marginTop:30,
+    marginBottom:20
   },
 });
 

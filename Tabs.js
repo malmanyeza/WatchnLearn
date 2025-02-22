@@ -142,10 +142,6 @@ const styles = StyleSheet.create({
     borderRadius: 40, // Make it elliptical (width/2)
     justifyContent: 'center',
     alignItems: 'center',
-    shadowOffset: { width: 0, height: 5 }, // Adjust shadow position
-    shadowOpacity: 0.8,
-    shadowRadius: 10, // Adjust shadow blur
-    elevation: 5, // For Android shadow
     marginBottom: 25, // Push the icon up
   },
 });
